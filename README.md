@@ -38,5 +38,6 @@
 - Test the script and check connection to MySQL Database 
 
 # LAB 3 : ANSIBLE
+- Deploy a new MySQL instance with ANSIBLE
 - 
 # LAB 4 : PROMETHEUS & GRAFANA
