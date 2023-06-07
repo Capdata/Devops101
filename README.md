@@ -17,9 +17,19 @@
   - Python3 & pip3
 
 # LAB 1 : GIT 
-- Configure git
-- Create local sandbox 
-- Clone repo
+- Configure git :
+<pre>
+$ su - student
+$ git config --global user.name "David Baffaleuf"
+$ git config --global user.email "dbaffaleuf@capdata-osmozium.com"
+$ git config --list
+user.name=David Baffaleuf
+user.email=dbaffaleuf@capdata-osmozium.com
+</pre>
+- Clone repository :
+<pre>
+
+</pre>
 - Create DEV branch
 - Position on DEV branch
 - Modify code to change credentials in connection property file
