@@ -70,6 +70,7 @@ $ git branch -a
 * main
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
+
 $ git checkout CONN_INIT_1
 Switched to branch 'CONN_INIT_1'
 
