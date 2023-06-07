@@ -20,8 +20,8 @@
 - Configure git :
 <pre>
 $ su - student
-$ git config --global user.name "David Baffaleuf"
-$ git config --global user.email "dbaffaleuf@capdata-osmozium.com"
+$ git config --global user.name "David Baffaleuf" # <-- put your name in here
+$ git config --global user.email "dbaffaleuf@capdata-osmozium.com" # <-- put your email in here
 $ git config --list
 user.name=David Baffaleuf
 user.email=dbaffaleuf@capdata-osmozium.com
