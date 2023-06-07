@@ -84,7 +84,47 @@ student@ip-192-1-1-124:~/FORMATION/DEVOPS101/GIT/Devops101$ vi my/cs.xml
 (...)
 </pre>
 
-- Position on DEV branch
+- Check differences with git diff and if OK, commit to the local repo:
+
+<pre>
+$ git diff
+diff --git a/my/cs.xml b/my/cs.xml
+index 5607a38..d0fca98 100644
+--- a/my/cs.xml
++++ b/my/cs.xml
+@@ -1,8 +1,8 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <connectionstring>
+-        <host>myhostname</host>
+-        <port>myport</port>
+-        <user>myuser</user>
+-        <passwd>mypassword</passwd>
+-        <database>mydb</database>
++        <host>host1</host>
++        <port>33060</port>
++        <user>root</user>
++        <passwd>pa$$w0rd</passwd>
++       <database>sakila</database>
+ </connectionstring>
+
+$ git add my/cs.xml
+
+$ git status
+On branch CONN_INIT_1
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   my/cs.xml
+
+
+$ git commit -m "changing connection string parameters..."
+[CONN_INIT_1 e6e596a] changing connection string parameters...
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+$ git status
+On branch CONN_INIT_1
+nothing to commit, working tree clean
+</pre>
+
 - Modify code to change credentials in connection property file
 - Check differences & Commit locally in locla branch
 - Push local branch to repo. 
