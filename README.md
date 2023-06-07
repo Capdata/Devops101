@@ -28,7 +28,13 @@ user.email=dbaffaleuf@capdata-osmozium.com
 </pre>
 - Clone repository :
 <pre>
-
+$ git clone https://github.com/Capdata/Devops101.git
+Cloning into 'Devops101'...
+remote: Enumerating objects: 30, done.
+remote: Counting objects: 100% (30/30), done.
+remote: Compressing objects: 100% (25/25), done.
+remote: Total 30 (delta 4), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 </pre>
 - Create DEV branch
 - Position on DEV branch
