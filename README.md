@@ -51,7 +51,7 @@ Devops101/
   <li>my_healthcheck.py : is the main program</li>
   <li>my/cs.xml : is the connection string configuration file</li>
   <li>my/myGetVersion.py : just a simple SQL code definition for getting version in MySQL, host of myGetVersion class</li>
-  <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection, requires MySQLdb PIP package</li>
+  <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
  </ul>s
 - Create DEV branch
 - Position on DEV branch
