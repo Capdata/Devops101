@@ -52,9 +52,37 @@ Devops101/
   <li>my/cs.xml : is the connection string configuration file</li>
   <li>my/myGetVersion.py : just a simple SQL code definition for getting version in MySQL, host of myGetVersion class</li>
   <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
- </ol>
+</ol>
  
-- Create DEV branch
+- Create a new branch called CONN_INIT_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
+<pre>
+$ cd ~/FORMATION/DEVOPS101/GIT
+
+$ git branch -a
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+
+$ git branch CONN_INIT_1
+
+$ git branch -a
+  CONN_INIT_1
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+$ git checkout CONN_INIT_1
+Switched to branch 'CONN_INIT_1'
+
+$ git branch -a
+* CONN_INIT_1
+  main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+
+student@ip-192-1-1-124:~/FORMATION/DEVOPS101/GIT/Devops101$ vi my/cs.xml
+(...)
+</pre>
+
 - Position on DEV branch
 - Modify code to change credentials in connection property file
 - Check differences & Commit locally in locla branch
