@@ -36,6 +36,21 @@ remote: Compressing objects: 100% (25/25), done.
 remote: Total 30 (delta 4), reused 0 (delta 0), pack-reused 0
 Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 </pre>
+- Navigate the local files:
+<pre>
+$ tree Devops101/
+Devops101/
+├── README.md
+├── my
+│   ├── cs.xml
+│   ├── myGetVersion.py
+│   └── myconnect.py
+└── my_healthcheck.py
+</pre>
+my_healthcheck.py : is the main program
+my/cs.xml : is the connection string configuration file
+my/myGetVersion.py : is the SQL code definition for getting version in MySQL, host of myGetVersion class
+my/myconect.py: host of alldbmyconnection, requires MySQLdb PIP package
 - Create DEV branch
 - Position on DEV branch
 - Modify code to change credentials in connection property file
