@@ -52,7 +52,8 @@ Devops101/
   <li>my/cs.xml : is the connection string configuration file</li>
   <li>my/myGetVersion.py : just a simple SQL code definition for getting version in MySQL, host of myGetVersion class</li>
   <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
- </ul>s
+ </ul>
+ 
 - Create DEV branch
 - Position on DEV branch
 - Modify code to change credentials in connection property file
