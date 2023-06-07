@@ -125,9 +125,14 @@ On branch CONN_INIT_1
 nothing to commit, working tree clean
 </pre>
 
-- Modify code to change credentials in connection property file
-- Check differences & Commit locally in locla branch
-- Push local branch to repo. 
+- Check if local repo is up to date and push local branch to remote repo:
+<pre>
+$ git pull origin main
+From https://github.com/Capdata/Devops101
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+</pre>
 
 # LAB 2 : DOCKER
 - Check Docker engine setup
