@@ -132,6 +132,8 @@ From https://github.com/Capdata/Devops101
  * branch            main       -> FETCH_HEAD
 Already up to date.
 
+$ git push origin CONN_INIT_1 
+
 </pre>
 
 # LAB 2 : DOCKER
