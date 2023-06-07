@@ -27,7 +27,7 @@
 - Push local branch to repo. 
 
 # LAB 2 : DOCKER
-- Setup Docker engine 
+- Check Docker engine setup
 - Create a persistent volume for MySQL
 - Create a dockerfile for MySQL
 - Build the image
