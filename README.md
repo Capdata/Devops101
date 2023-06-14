@@ -133,6 +133,17 @@ From https://github.com/Capdata/Devops101
 Already up to date.
 
 $ git push origin CONN_INIT_1 
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 595 bytes | 595.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0)
+remote:
+remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
+remote:      https://github.com/Capdata/Devops101/pull/new/CONN_INIT_1
+remote:
+To https://github.com/Capdata/Devops101.git
+ * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 
 </pre>
 
