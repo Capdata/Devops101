@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <connectionstring>
-        <host>myhostname</host>
-        <port>myport</port>
-        <user>myuser</user>
-        <passwd>mypassword</passwd>
-        <database>mydb</database>
+        <host>host1</host>
+        <port>33060</port>
+        <user>root</user>
+        <passwd>pa$$w0rd</passwd>
+        <database>sakila</database>
 </connectionstring>
