@@ -137,8 +137,15 @@ To https://github.com/Capdata/Devops101.git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 </pre>
 
+- Disconnects from the host
+<pre>exit</pre>
+
 # LAB 2 : DOCKER
-- Check Docker engine setup
+- Connect to the host as student user, and navigate to the ~DOCKER working directory:
+<pre>
+$ su - student
+$ cd FORMATION/DEVOPS101/DOCKER/
+</pre>
 - Create a persistent volume for MySQL
 - Create a dockerfile for MySQL
 - Build the image
