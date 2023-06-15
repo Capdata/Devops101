@@ -141,10 +141,33 @@ To https://github.com/Capdata/Devops101.git
 <pre>exit</pre>
 
 # LAB 2 : DOCKER
-- Connect to the host as student user, and navigate to the ~DOCKER working directory:
+- Connect to the host as student user:
 <pre>
 $ su - student
-$ cd FORMATION/DEVOPS101/DOCKER/
+</pre>
+- Create a new local branch called DOCKER_INIT_1 and checkout to this branch.
+- Under student[1-6]/dockerfiles, create a new Dockerfile to build a custom MySQL image using the following parameters and details in the training manual:
+<ol>
+  <li>Version : latest</li>
+  <li>additionnal packages to install : vim</li>
+  <li>Create Data Directory : /mysqldata</li>
+  <li>Mount Docker Volume /mysqldata</li> 
+  <li>Mount student[1-6]/sql local git directory to the docker entry point</li>
+  <li>Copy student[1-6]/etc/my.cnf local git file into the containers='s /etc/mysql</li>
+</ol>
+... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
+<pre>
+$ vi 
+FROM mysql:latest
+RUN apt-get update && apt-get install -y vim
+RUN mkdir /mysqldata
+VOLUME /mysqldata
+COPY my.cnf /etc/mysql/conf.d/my.cnf
+ADD sql/ /docker-entrypoint-initdb.d
+ENV MYSQL_ROOT_PASSWORD=********
+ENV MYSQL_DATABASE *******
+EXPOSE *****/tcp
+CMD ["mysqld"]
 </pre>
 - Create a persistent volume for MySQL
 - Create a dockerfile for MySQL
