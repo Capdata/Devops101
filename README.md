@@ -41,11 +41,13 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 $ tree Devops101/
 Devops101/
 ├── README.md
-├── my
-│   ├── cs.xml
-│   ├── myGetVersion.py
-│   └── myconnect.py
-└── my_healthcheck.py
+└── student0
+    ├── README.md
+    ├── my
+    │   ├── cs.xml
+    │   ├── myGetVersion.py
+    │   └── myconnect.py
+    └── my_healthcheck.py
 </pre>
 <ol>
   <li>my_healthcheck.py : is the main program</li>
@@ -54,9 +56,9 @@ Devops101/
   <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
 </ol>
  
-- Create a new branch called CONN_INIT_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
+- Create a new branch called CONN_INIT_1, duplicate student0 into student[1-6], and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
 <pre>
-$ cd ~/FORMATION/DEVOPS101/GIT
+$ cd ~/FORMATION/DEVOPS101/GIT/Devops101
 
 $ git branch -a
 * main
