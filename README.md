@@ -20,11 +20,11 @@
 - Configure git :
 <pre>
 $ su - student
-$ git config --global user.name "David Baffaleuf" # <-- put your name in here
-$ git config --global user.email "dbaffaleuf@capdata-osmozium.com" # <-- put your email in here
+$ git config --global user.name "student-capdata" # <-- put your name in here
+$ git config --global user.email "students@capdata-osmozium.com" # <-- put your email in here
 $ git config --list
-user.name=David Baffaleuf
-user.email=dbaffaleuf@capdata-osmozium.com
+user.name=student-capdata
+user.email=students@capdata-osmozium.com
 </pre>
 - Clone repository :
 <pre>
