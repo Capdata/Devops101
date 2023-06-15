@@ -82,45 +82,34 @@ $ git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-student@ip-192-1-1-124:~/FORMATION/DEVOPS101/GIT/Devops101$ vi my/cs.xml
+$ cp -pR student0 student1  # [1-6]
+$ vi student1/my/cs.xml    # [1-6]
 (...)
 </pre>
 
-- Check differences with git diff and if OK, commit to the local repo:
+- add new directory and files, and commit to the local repo:
 
 <pre>
-$ git diff
-diff --git a/my/cs.xml b/my/cs.xml
-index 5607a38..d0fca98 100644
---- a/my/cs.xml
-+++ b/my/cs.xml
-@@ -1,8 +1,8 @@
- <?xml version="1.0" encoding="UTF-8"?>
- <connectionstring>
--        <host>myhostname</host>
--        <port>myport</port>
--        <user>myuser</user>
--        <passwd>mypassword</passwd>
--        <database>mydb</database>
-+        <host>host1</host>
-+        <port>33060</port>
-+        <user>root</user>
-+        <passwd>pa$$w0rd</passwd>
-+       <database>sakila</database>
- </connectionstring>
-
-$ git add my/cs.xml
+$ git add --all
 
 $ git status
 On branch CONN_INIT_1
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-        modified:   my/cs.xml
-
+        new file:   student1/README.md
+        new file:   student1/my/cs.xml
+        new file:   student1/my/myGetVersion.py
+        new file:   student1/my/myconnect.py
+        new file:   student1/my_healthcheck.py
 
 $ git commit -m "changing connection string parameters..."
-[CONN_INIT_1 e6e596a] changing connection string parameters...
- 1 file changed, 5 insertions(+), 5 deletions(-)
+[CONN_INIT_1 096b67b] changing connection string parameters...
+ 5 files changed, 148 insertions(+)
+ create mode 100644 student1/README.md
+ create mode 100644 student1/my/cs.xml
+ create mode 100644 student1/my/myGetVersion.py
+ create mode 100644 student1/my/myconnect.py
+ create mode 100644 student1/my_healthcheck.py
 
 $ git status
 On branch CONN_INIT_1
@@ -135,18 +124,17 @@ From https://github.com/Capdata/Devops101
 Already up to date.
 
 $ git push origin CONN_INIT_1 
-Enumerating objects: 7, done.
-Counting objects: 100% (7/7), done.
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (4/4), 595 bytes | 595.00 KiB/s, done.
-Total 4 (delta 0), reused 0 (delta 0)
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 708 bytes | 708.00 KiB/s, done.
+Total 5 (delta 0), reused 0 (delta 0)
 remote:
 remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
 remote:      https://github.com/Capdata/Devops101/pull/new/CONN_INIT_1
 remote:
 To https://github.com/Capdata/Devops101.git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
-
 </pre>
 
 # LAB 2 : DOCKER
