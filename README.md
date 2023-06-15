@@ -157,7 +157,9 @@ $ su - student
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
-$ vi 
+$ cd ~/FORMATION/DEVOPS101/GIT/Devops101/dockerfiles
+$ vi Dockerfile
+(...)
 FROM mysql:latest
 RUN apt-get update && apt-get install -y vim
 RUN mkdir /mysqldata
@@ -169,6 +171,7 @@ ENV MYSQL_DATABASE *******
 EXPOSE *****/tcp
 CMD ["mysqld"]
 </pre>
+
 - Create a persistent volume for MySQL
 - Create a dockerfile for MySQL
 - Build the image
