@@ -43,7 +43,7 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 $ tree devops_studentXX/
 devops_studentXX/
 ├── README.md
-└── student1
+└── studentXX
     ├── README.md
     ├── dockerfiles
     │   ├── README.md
