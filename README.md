@@ -43,13 +43,22 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 $ tree devops_studentXX/
 devops_studentXX/
 ├── README.md
-└── student0
+└── student1
     ├── README.md
+    ├── dockerfiles
+    │   ├── README.md
+    │   └── my.cnf
     ├── my
     │   ├── cs.xml
     │   ├── myGetVersion.py
     │   └── myconnect.py
-    └── my_healthcheck.py
+    ├── my_healthcheck.py
+    └── sql
+        ├── 1_sakila-schema.sql
+        ├── 2_sakila-data.sql
+        ├── 3_alter_user_sakila.sql
+        └── README.md
+
 </pre>
 <ol>
   <li>my_healthcheck.py : is the main program</li>
