@@ -67,7 +67,7 @@ devops_student[1-6]/
   <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
 </ol>
  
-- Create a new branch called CONN_INIT_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
+- Create a new branch called MYSQL_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
 <pre>
 $ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]
 
@@ -76,19 +76,19 @@ $ git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-$ git branch CONN_INIT_1
+$ git branch MYSQL_1
 
 $ git branch -a
-  CONN_INIT_1
+  MYSQL_1
 * main
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-$ git checkout CONN_INIT_1
-Switched to branch 'CONN_INIT_1'
+$ git checkout MYSQL_1
+Switched to branch 'MYSQL_1'
 
 $ git branch -a
-* CONN_INIT_1
+* MYSQL_1
   main
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
@@ -103,17 +103,17 @@ $ vi student[1-6]my/cs.xml
 $ git add --all
 
 $ git status
-On branch CONN_INIT_1
+On branch MYSQL_1
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
         modified:   student[1-6]/my/cs.xml
 
 $ git commit -m "changing connection string parameters..."
-[CONN_INIT_1 277aec0] changing connection string parameters...
+[MYSQL_1 277aec0] changing connection string parameters...
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 $ git status
-On branch CONN_INIT_1
+On branch MYSQL_1
 nothing to commit, working tree clean
 </pre>
 
@@ -124,7 +124,7 @@ From https://github.com/Capdata/devops_student[1-6]
  * branch            main       -> FETCH_HEAD
 Already up to date.
 
-$ git push origin CONN_INIT_1 
+$ git push origin MYSQL_1 
 Enumerating objects: 9, done.
 Counting objects: 100% (9/9), done.
 Compressing objects: 100% (5/5), done.
@@ -132,11 +132,11 @@ Writing objects: 100% (5/5), 623 bytes | 623.00 KiB/s, done.
 Total 5 (delta 1), reused 0 (delta 0)
 remote: Resolving deltas: 100% (1/1), completed with 1 local object.
 remote:
-remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
-remote:      https://github.com/Capdata/devops_student[1-6]/pull/new/CONN_INIT_1
+remote: Create a pull request for 'MYSQL_1' on GitHub by visiting:
+remote:      https://github.com/Capdata/devops_student[1-6]/pull/new/MYSQL_1
 remote:
 To https://github.com/Capdata/devops_student[1-6].git
- * [new branch]      CONN_INIT_1 -> CONN_INIT_1
+ * [new branch]      MYSQL_1 -> MYSQL_1
 </pre>
 
 - Get back to main branch
@@ -147,31 +147,17 @@ Switched to branch 'main'
 <pre>exit</pre>
 
 # LAB 2 : DOCKER
-- Connect to the host as student user:
+- Connect to the host as student user and check that the current GIT branch under ~/FORMATION/DEVOPS101/GIT/devops_student[1-6] is MYSQL_1:
 <pre>
 $ su - student
 $ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]
-</pre>
-- Create a new local branch called DOCKER_INIT_1 and checkout to this branch.
-<pre>
 $ git branch -a
-  CONN_INIT_1
-* main
-  remotes/origin/CONN_INIT_1
+* MYSQL_1
+  main
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
-
-$ git branch DOCKER_INIT_1
-$ git checkout DOCKER_INIT_1
-Switched to branch 'DOCKER_INIT_1'
-$ git branch -a
-  CONN_INIT_1
-* DOCKER_INIT_1
-  main
-  remotes/origin/CONN_INIT_1
-  remotes/origin/HEAD -> origin/main
-  remotes/origin/main  
 </pre>
+
 - Under student[1-6]/dockerfiles, create a new Dockerfile to build a custom MySQL image using the following parameters and details in the training manual:
 <ol>
   <li>Version : latest</li>
