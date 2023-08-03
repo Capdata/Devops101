@@ -179,7 +179,7 @@ $ git branch -a
   <li>Create Data Directory : /mysqldata</li>
   <li>Mount Docker Volume /mysqldata</li> 
   <li>Mount student[1-6]/sql local git directory to the docker entry point</li>
-  <li>Copy student[1-6]/etc/my.cnf local git file into the containers='s /etc/mysql</li>
+  <li>Copy student[1-6]/etc/my.cnf local git file into the container's /etc/mysql</li>
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
