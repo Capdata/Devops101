@@ -125,16 +125,17 @@ From https://github.com/Capdata/devops_studentXX
 Already up to date.
 
 $ git push origin CONN_INIT_1 
-Enumerating objects: 6, done.
-Counting objects: 100% (6/6), done.
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
 Compressing objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 708 bytes | 708.00 KiB/s, done.
-Total 5 (delta 0), reused 0 (delta 0)
+Writing objects: 100% (5/5), 623 bytes | 623.00 KiB/s, done.
+Total 5 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
 remote:
 remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
-remote:      https://github.com/Capdata/devops_studentXX/pull/new/CONN_INIT_1
+remote:      https://github.com/Capdata/devops_student1/pull/new/CONN_INIT_1
 remote:
-To https://github.com/Capdata/devops_studentXX.git
+To https://github.com/Capdata/devops_student1.git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 </pre>
 
