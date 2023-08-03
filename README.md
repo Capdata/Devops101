@@ -147,6 +147,8 @@ To https://github.com/Capdata/devops_student[1-6].git
 <pre>
 $ su - student
 $ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]
+$ git checkout MYSQL_1
+Switched to branch 'MYSQL_1'
 $ git branch -a
 * MYSQL_1
   main
