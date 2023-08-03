@@ -30,7 +30,7 @@ user.email=students@capdata-osmozium.com
 - Clone repository :
 A user token will be given to you during the training. It will be referred as \<TOKEN\> in the docs...
 <pre>
-$ git clone https://students-capdata:<TOKEN>@github.com/Capdata/devops_student<YOURNUMBER 1-6>.git
+$ git clone https://students-capdata:\<TOKEN\>@github.com/Capdata/devops_student<YOURNUMBER 1-6>.git
 Cloning into 'devops_studentXX'...
 remote: Enumerating objects: 30, done.
 remote: Counting objects: 100% (30/30), done.
