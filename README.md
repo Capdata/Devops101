@@ -191,11 +191,8 @@ $ sudo docker build -t student[1-6]/mysqlserver .
  => => transferring context: 2B                                                                                                                                                                  
  => [internal] load metadata for docker.io/library/mysql:8-debian                                                                                                                                
  => [1/5] FROM docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                                          
- => resolve docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                                               
-(...)                                                                                                                                                                              0.0s
- => [2/5] RUN apt-get update && apt-get install -y vim                                                                                                                                            
- => [3/5] RUN mkdir /mysqldata                                                                                                                                                                     
- => [4/5] COPY my.cnf /etc/mysql/conf.d/my.cnf                                                                                                                                                        => [5/5] ADD sql/ /docker-entrypoint-initdb.d                                                                                                                                                        => exporting to image                                                                                                                                                                                => exporting layers                                                                                                                                                                                  => writing image sha256:01e39e90335db4b6bd9cf5d833ed0476307c52cbfb6eb03068ed23a2e2c2ba32                                                                                                             => naming to docker.io/student[1-6]/mysqlserver      
+ => resolve docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33 
+(...)
 
   $ sudo docker image ls
 REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
