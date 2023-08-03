@@ -194,45 +194,55 @@ $ sudo docker build -t student[1-6]/mysqlserver .
  => resolve docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33 
 (...)
 
-  $ sudo docker image ls
+$ sudo docker image ls
 REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
 student1/mysqlserver   latest    01e39e90335d   4 minutes ago   659MB
 </pre> 
 
-- Run the image in a container named mysqlserver1
+- Observe the contents and layers of the image created 
 <pre>
 $ sudo docker image history student1/mysqlserver
-IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
-01e39e90335d   7 minutes ago   CMD ["mysqld"]                                  0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   EXPOSE map[****/tcp:{}]                         0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   ENV MYSQL_DATABASE=*****                        0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   ENV MYSQL_ROOT_PASSWORD=*******                 0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   ADD sql/ /docker-entrypoint-initdb.d # build…   3.38MB    buildkit.dockerfile.v0
-<missing>      7 minutes ago   COPY my.cnf /etc/mysql/conf.d/my.cnf # build…   70B       buildkit.dockerfile.v0
-<missing>      7 minutes ago   VOLUME [/mysqldata]                             0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   RUN /bin/sh -c mkdir /mysqldata # buildkit      0B        buildkit.dockerfile.v0
-<missing>      7 minutes ago   RUN /bin/sh -c apt-get update && apt-get ins…   54.5MB    buildkit.dockerfile.v0
-<missing>      6 days ago      /bin/sh -c #(nop)  CMD ["mysqld"]               0B
-<missing>      6 days ago      /bin/sh -c #(nop)  EXPOSE 3306 33060            0B
-<missing>      6 days ago      /bin/sh -c #(nop)  ENTRYPOINT ["docker-entry…   0B
-<missing>      6 days ago      /bin/sh -c ln -s usr/local/bin/docker-entryp…   34B
-<missing>      6 days ago      /bin/sh -c #(nop) COPY file:e9c22353a1133b89…   14.2kB
-<missing>      6 days ago      /bin/sh -c #(nop) COPY dir:2e040acc386ebd23b…   1.12kB
-<missing>      6 days ago      /bin/sh -c #(nop)  VOLUME [/var/lib/mysql]      0B
-<missing>      6 days ago      /bin/sh -c {   echo mysql-community-server m…   456MB
-<missing>      6 days ago      /bin/sh -c echo 'deb [ signed-by=/etc/apt/ke…   99B
-<missing>      6 days ago      /bin/sh -c #(nop)  ENV MYSQL_VERSION=8.0.34-…   0B
-<missing>      6 days ago      /bin/sh -c #(nop)  ENV MYSQL_MAJOR=8.0          0B
-<missing>      6 days ago      /bin/sh -c set -eux;  key='859BE8D7C586F5384…   2.29kB
-<missing>      6 days ago      /bin/sh -c set -eux;  apt-get update;  apt-g…   49.9MB
-<missing>      6 days ago      /bin/sh -c mkdir /docker-entrypoint-initdb.d    0B
-<missing>      6 days ago      /bin/sh -c set -eux;  savedAptMark="$(apt-ma…   4.23MB
-<missing>      6 days ago      /bin/sh -c #(nop)  ENV GOSU_VERSION=1.16        0B
-<missing>      6 days ago      /bin/sh -c apt-get update && apt-get install…   9.96MB
-<missing>      6 days ago      /bin/sh -c groupadd -r mysql && useradd -r -…   329kB
-<missing>      6 days ago      /bin/sh -c #(nop)  CMD ["bash"]                 0B
-<missing>      6 days ago      /bin/sh -c #(nop) ADD file:3d726bf0abbc08d6d…   80.5MB
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+01e39e90335d   15 minutes ago   CMD ["mysqld"]                                  0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   EXPOSE map[3306/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   ENV MYSQL_DATABASE=mysql                        0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   ENV MYSQL_ROOT_PASSWORD=capdata                 0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   ADD sql/ /docker-entrypoint-initdb.d # build…   3.38MB    buildkit.dockerfile.v0
+<missing>      15 minutes ago   COPY my.cnf /etc/mysql/conf.d/my.cnf # build…   70B       buildkit.dockerfile.v0
+<missing>      15 minutes ago   VOLUME [/mysqldata]                             0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   RUN /bin/sh -c mkdir /mysqldata # buildkit      0B        buildkit.dockerfile.v0
+<missing>      15 minutes ago   RUN /bin/sh -c apt-get update && apt-get ins…   54.5MB    buildkit.dockerfile.v0
+<missing>      6 days ago       /bin/sh -c #(nop)  CMD ["mysqld"]               0B
+<missing>      6 days ago       /bin/sh -c #(nop)  EXPOSE 3306 33060            0B
+<missing>      6 days ago       /bin/sh -c #(nop)  ENTRYPOINT ["docker-entry…   0B
+<missing>      6 days ago       /bin/sh -c ln -s usr/local/bin/docker-entryp…   34B
+<missing>      6 days ago       /bin/sh -c #(nop) COPY file:e9c22353a1133b89…   14.2kB
+<missing>      6 days ago       /bin/sh -c #(nop) COPY dir:2e040acc386ebd23b…   1.12kB
+<missing>      6 days ago       /bin/sh -c #(nop)  VOLUME [/var/lib/mysql]      0B
+<missing>      6 days ago       /bin/sh -c {   echo mysql-community-server m…   456MB
+<missing>      6 days ago       /bin/sh -c echo 'deb [ signed-by=/etc/apt/ke…   99B
+<missing>      6 days ago       /bin/sh -c #(nop)  ENV MYSQL_VERSION=8.0.34-…   0B
+<missing>      6 days ago       /bin/sh -c #(nop)  ENV MYSQL_MAJOR=8.0          0B
+<missing>      6 days ago       /bin/sh -c set -eux;  key='859BE8D7C586F5384…   2.29kB
+<missing>      6 days ago       /bin/sh -c set -eux;  apt-get update;  apt-g…   49.9MB
+<missing>      6 days ago       /bin/sh -c mkdir /docker-entrypoint-initdb.d    0B
+<missing>      6 days ago       /bin/sh -c set -eux;  savedAptMark="$(apt-ma…   4.23MB
+<missing>      6 days ago       /bin/sh -c #(nop)  ENV GOSU_VERSION=1.16        0B
+<missing>      6 days ago       /bin/sh -c apt-get update && apt-get install…   9.96MB
+<missing>      6 days ago       /bin/sh -c groupadd -r mysql && useradd -r -…   329kB
+<missing>      6 days ago       /bin/sh -c #(nop)  CMD ["bash"]                 0B
+<missing>      6 days ago       /bin/sh -c #(nop) ADD file:3d726bf0abbc08d6d…   80.5MB
 </pre>
+- Run the image in a container named mysqlserver1:
+<pre>
+$ sudo docker run -tid --name mysqlserver1 student1/mysqlserver:latest
+8f5d8cbe3d09d8a7238325947218ac2056f14e5d1435a379f34b58b825ac2dd0
+
+$ sudo docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                 NAMES
+8f5d8cbe3d09   student1/mysqlserver:latest   "docker-entrypoint.s…"   16 seconds ago   Up 15 seconds   3306/tcp, 33060/tcp   mysqlserver1
+</pre>
+- Connect to the docker container and connect to the MySQL database server and inspect the contents by listings databases and objects.  
 
 - Create a persistent volume for MySQL
 <pre>
