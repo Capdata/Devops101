@@ -28,10 +28,10 @@ user.name=students-capdata
 user.email=students@capdata-osmozium.com
 </pre>
 - Clone repository :
-A user token will be given to you during the training. It will be referred as TOKEN in the docs... Your student number will be referred as -YOURNUMBER 1-6-, eg devops_student1, etc... 
+A user token will be given to you during the training. It will be referred as TOKEN in the docs... Your student number will be referred as [1-6], eg devops_student1, devops_student2, etc... 
 <pre>
-$ git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student-YOURNUMBER 1-6-.git
-Cloning into 'devops_studentXX'...
+$ git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1-6].git
+Cloning into 'devops_student[1-6]'...
 remote: Enumerating objects: 30, done.
 remote: Counting objects: 100% (30/30), done.
 remote: Compressing objects: 100% (25/25), done.
@@ -40,7 +40,7 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 </pre>
 - Navigate the local files:
 <pre>
-$ tree devops_studentXX/
+$ tree devops_student[1-6]/
 devops_studentXX/
 ├── README.md
 └── studentXX
@@ -69,7 +69,7 @@ devops_studentXX/
  
 - Create a new branch called CONN_INIT_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
 <pre>
-$ cd ~/FORMATION/DEVOPS101/GIT/devops_studentXX
+$ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]
 
 $ git branch -a
 * main
@@ -93,7 +93,7 @@ $ git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-$ vi studentXX/my/cs.xml    # [XX == 1-6]
+$ vi student[1-6]my/cs.xml    
 (...)
 </pre>
 
@@ -106,7 +106,7 @@ $ git status
 On branch CONN_INIT_1
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-        modified:   student1/my/cs.xml
+        modified:   student[1-6]/my/cs.xml
 
 $ git commit -m "changing connection string parameters..."
 [CONN_INIT_1 277aec0] changing connection string parameters...
@@ -120,7 +120,7 @@ nothing to commit, working tree clean
 - Check if local repo is up to date and push local branch to remote repo:
 <pre>
 $ git pull origin main
-From https://github.com/Capdata/devops_studentXX
+From https://github.com/Capdata/devops_student[1-6]
  * branch            main       -> FETCH_HEAD
 Already up to date.
 
@@ -133,9 +133,9 @@ Total 5 (delta 1), reused 0 (delta 0)
 remote: Resolving deltas: 100% (1/1), completed with 1 local object.
 remote:
 remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
-remote:      https://github.com/Capdata/devops_student1/pull/new/CONN_INIT_1
+remote:      https://github.com/Capdata/devops_student[1-6]/pull/new/CONN_INIT_1
 remote:
-To https://github.com/Capdata/devops_student1.git
+To https://github.com/Capdata/devops_student[1-6].git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 </pre>
 
