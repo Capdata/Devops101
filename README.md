@@ -20,6 +20,7 @@
 - Configure git :
 <pre>
 $ su - student
+$ cd ~/FORMATION/DEVOPS101/GIT
 $ git config --global user.name "students-capdata" # <-- put your name in here
 $ git config --global user.email "students@capdata-osmozium.com" # <-- put your email in here
 $ git config --list
