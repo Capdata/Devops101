@@ -28,7 +28,7 @@ user.name=students-capdata
 user.email=students@capdata-osmozium.com
 </pre>
 - Clone repository :
-A user token will be given to you during the training. It will be referred as TOKEN in the docs... Your student number will be reffered as -YOURNUMBER 1-6-
+A user token will be given to you during the training. It will be referred as TOKEN in the docs... Your student number will be referred as -YOURNUMBER 1-6-, eg devops_student1, etc... 
 <pre>
 $ git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student-YOURNUMBER 1-6-.git
 Cloning into 'devops_studentXX'...
