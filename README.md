@@ -106,20 +106,11 @@ $ git status
 On branch CONN_INIT_1
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-        new file:   studentXX/README.md
-        new file:   studentXX/my/cs.xml
-        new file:   studentXX/my/myGetVersion.py
-        new file:   studentXX/my/myconnect.py
-        new file:   studentXX/my_healthcheck.py
+        modified:   student1/my/cs.xml
 
 $ git commit -m "changing connection string parameters..."
-[CONN_INIT_1 096b67b] changing connection string parameters...
- 5 files changed, 148 insertions(+)
- create mode 100644 studentXX/README.md
- create mode 100644 studentXX/my/cs.xml
- create mode 100644 studentXX/my/myGetVersion.py
- create mode 100644 studentXX/my/myconnect.py
- create mode 100644 studentXX/my_healthcheck.py
+[CONN_INIT_1 277aec0] changing connection string parameters...
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 $ git status
 On branch CONN_INIT_1
