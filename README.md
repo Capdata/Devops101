@@ -139,6 +139,10 @@ To https://github.com/Capdata/devops_student[1-6].git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 </pre>
 
+- Get back to main branch
+<pre>$ git checkout main
+Switched to branch 'main'
+</pre>
 - Disconnects from the host
 <pre>exit</pre>
 
