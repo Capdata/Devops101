@@ -158,7 +158,7 @@ $ git branch -a
 
 - Under student[1-6]/dockerfiles, create a new Dockerfile to build a custom MySQL image using the following parameters and details in the training manual:
 <ol>
-  <li>Version : latest</li>
+  <li>Version : 8-debian</li>
   <li>additionnal packages to install : vim</li>
   <li>Create Data Directory : /mysqldata</li>
   <li>Mount Docker Volume /mysqldata</li> 
@@ -167,27 +167,56 @@ $ git branch -a
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
-$ vi student1/dockerfiles/Dockerfile
+$ cd student1/dockerfiles
+$ vi Dockerfile
 (...)
-FROM mysql:latest
+FROM mysql:8-debian
 RUN apt-get update && apt-get install -y vim
 RUN mkdir /mysqldata
 VOLUME /mysqldata
 COPY my.cnf /etc/mysql/conf.d/my.cnf
 ADD sql/ /docker-entrypoint-initdb.d
-ENV MYSQL_ROOT_PASSWORD=********
-ENV MYSQL_DATABASE=*******
-EXPOSE *****/tcp
+ENV MYSQL_ROOT_PASSWORD=*****
+ENV MYSQL_DATABASE=*****
+EXPOSE ****/tcp
 CMD ["mysqld"]
 </pre>
+- Build the image
+<pre>
+$ sudo docker build -t student[1-6]/mysqlserver .
+[+] Building 21.5s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                                                                                                                                                
+ => transferring dockerfile: 305B                                                                                                                                                                 
+ => [internal] load .dockerignore                                                                                                                                                                 
+ => => transferring context: 2B                                                                                                                                                                  
+ => [internal] load metadata for docker.io/library/mysql:8-debian                                                                                                                                
+ => [1/5] FROM docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                                          
+ => resolve docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                                               
+(...)                                                                                                                                                                              0.0s
+ => [2/5] RUN apt-get update && apt-get install -y vim                                                                                                                                            
+ => [3/5] RUN mkdir /mysqldata                                                                                                                                                                     
+ => [4/5] COPY my.cnf /etc/mysql/conf.d/my.cnf                                                                                                                                                        => [5/5] ADD sql/ /docker-entrypoint-initdb.d                                                                                                                                                        => exporting to image                                                                                                                                                                                => exporting layers                                                                                                                                                                                  => writing image sha256:01e39e90335db4b6bd9cf5d833ed0476307c52cbfb6eb03068ed23a2e2c2ba32                                                                                                             => naming to docker.io/student[1-6]/mysqlserver      
+
+  $ sudo docker image ls
+REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
+student1/mysqlserver   latest    01e39e90335d   4 minutes ago   659MB
+</pre> 
+
 
 - Create a persistent volume for MySQL
-- Create a dockerfile for MySQL
-- Build the image
-- Run the MySQL Container based on the created image
+<pre>
+$ docker volume create mysqlvolume 
+# CLEANUP : docker volume rm mysqlvolume 
+</pre>
+
+- Run the MySQL Container based on the created image and on the persisted volume
+
 - Observe layer history and try to optimize the image
+
 - Run a simple Ubuntu 20.04 docker container from the public repository 
+
 - Connect to the container and get the MySQL monitoring script
+
 - Test the script and check connection to MySQL Database 
 
 # LAB 3 : ANSIBLE
