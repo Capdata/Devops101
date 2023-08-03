@@ -1,4 +1,4 @@
-# Devops101
+# Devops101x
 (Repo for Devops 101 for DBAs training)
 
 # PREREQS
