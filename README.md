@@ -41,9 +41,9 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 - Navigate the local files:
 <pre>
 $ tree devops_student[1-6]/
-devops_studentXX/
+devops_student[1-6]/
 ├── README.md
-└── studentXX
+└── student[1-6]
     ├── README.md
     ├── dockerfiles
     │   ├── README.md
