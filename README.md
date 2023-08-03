@@ -176,7 +176,7 @@ VOLUME /mysqldata
 COPY my.cnf /etc/mysql/conf.d/my.cnf
 ADD sql/ /docker-entrypoint-initdb.d
 ENV MYSQL_ROOT_PASSWORD=********
-ENV MYSQL_DATABASE *******
+ENV MYSQL_DATABASE=*******
 EXPOSE *****/tcp
 CMD ["mysqld"]
 </pre>
