@@ -139,10 +139,6 @@ To https://github.com/Capdata/devops_student[1-6].git
  * [new branch]      MYSQL_1 -> MYSQL_1
 </pre>
 
-- Get back to main branch
-<pre>$ git checkout main
-Switched to branch 'main'
-</pre>
 - Disconnects from the host
 <pre>exit</pre>
 
