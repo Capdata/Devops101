@@ -20,16 +20,16 @@
 - Configure git :
 <pre>
 $ su - student
-$ git config --global user.name "student-capdata" # <-- put your name in here
+$ git config --global user.name "students-capdata" # <-- put your name in here
 $ git config --global user.email "students@capdata-osmozium.com" # <-- put your email in here
 $ git config --list
-user.name=student-capdata
+user.name=students-capdata
 user.email=students@capdata-osmozium.com
 </pre>
 - Clone repository :
 <pre>
-$ git clone https://github.com/Capdata/Devops101.git
-Cloning into 'Devops101'...
+$ git clone https://students-capdata:<TOKEN>@github.com/Capdata/devops_student<YOURNUMBER 1-6>.git
+Cloning into 'devops_studentXX'...
 remote: Enumerating objects: 30, done.
 remote: Counting objects: 100% (30/30), done.
 remote: Compressing objects: 100% (25/25), done.
@@ -38,8 +38,8 @@ Unpacking objects: 100% (30/30), 8.43 KiB | 1.05 MiB/s, done.
 </pre>
 - Navigate the local files:
 <pre>
-$ tree Devops101/
-Devops101/
+$ tree devops_studentXX/
+devops_studentXX/
 ├── README.md
 └── student0
     ├── README.md
@@ -56,9 +56,9 @@ Devops101/
   <li>my/myconnect.py: where the MySQL connection happens, host of alldbmyconnection class, requires MySQLdb PIP package</li>
 </ol>
  
-- Create a new branch called CONN_INIT_1, duplicate student0 into student[1-6], and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
+- Create a new branch called CONN_INIT_1, and in the context of this new branch, modify the my.cs.xml file to reflect the correct connection string parameters (given by the trainer)    
 <pre>
-$ cd ~/FORMATION/DEVOPS101/GIT/Devops101
+$ cd ~/FORMATION/DEVOPS101/GIT/devops_studentXX
 
 $ git branch -a
 * main
@@ -82,8 +82,7 @@ $ git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-$ cp -pR student0 student1  # [1-6]
-$ vi student1/my/cs.xml    # [1-6]
+$ vi studentXX/my/cs.xml    # [XX == 1-6]
 (...)
 </pre>
 
@@ -96,20 +95,20 @@ $ git status
 On branch CONN_INIT_1
 Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
-        new file:   student1/README.md
-        new file:   student1/my/cs.xml
-        new file:   student1/my/myGetVersion.py
-        new file:   student1/my/myconnect.py
-        new file:   student1/my_healthcheck.py
+        new file:   studentXX/README.md
+        new file:   studentXX/my/cs.xml
+        new file:   studentXX/my/myGetVersion.py
+        new file:   studentXX/my/myconnect.py
+        new file:   studentXX/my_healthcheck.py
 
 $ git commit -m "changing connection string parameters..."
 [CONN_INIT_1 096b67b] changing connection string parameters...
  5 files changed, 148 insertions(+)
- create mode 100644 student1/README.md
- create mode 100644 student1/my/cs.xml
- create mode 100644 student1/my/myGetVersion.py
- create mode 100644 student1/my/myconnect.py
- create mode 100644 student1/my_healthcheck.py
+ create mode 100644 studentXX/README.md
+ create mode 100644 studentXX/my/cs.xml
+ create mode 100644 studentXX/my/myGetVersion.py
+ create mode 100644 studentXX/my/myconnect.py
+ create mode 100644 studentXX/my_healthcheck.py
 
 $ git status
 On branch CONN_INIT_1
@@ -119,7 +118,7 @@ nothing to commit, working tree clean
 - Check if local repo is up to date and push local branch to remote repo:
 <pre>
 $ git pull origin main
-From https://github.com/Capdata/Devops101
+From https://github.com/Capdata/devops_studentXX
  * branch            main       -> FETCH_HEAD
 Already up to date.
 
@@ -131,9 +130,9 @@ Writing objects: 100% (5/5), 708 bytes | 708.00 KiB/s, done.
 Total 5 (delta 0), reused 0 (delta 0)
 remote:
 remote: Create a pull request for 'CONN_INIT_1' on GitHub by visiting:
-remote:      https://github.com/Capdata/Devops101/pull/new/CONN_INIT_1
+remote:      https://github.com/Capdata/devops_studentXX/pull/new/CONN_INIT_1
 remote:
-To https://github.com/Capdata/Devops101.git
+To https://github.com/Capdata/devops_studentXX.git
  * [new branch]      CONN_INIT_1 -> CONN_INIT_1
 </pre>
 
