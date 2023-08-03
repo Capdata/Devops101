@@ -150,8 +150,28 @@ Switched to branch 'main'
 - Connect to the host as student user:
 <pre>
 $ su - student
+$ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]
 </pre>
 - Create a new local branch called DOCKER_INIT_1 and checkout to this branch.
+<pre>
+$ git branch -a
+  CONN_INIT_1
+* main
+  remotes/origin/CONN_INIT_1
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+
+$ git branch DOCKER_INIT_1
+$ git checkout DOCKER_INIT_1
+Switched to branch 'DOCKER_INIT_1'
+$ git branch -a
+  CONN_INIT_1
+* DOCKER_INIT_1
+  main
+  remotes/origin/CONN_INIT_1
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main  
+</pre>
 - Under student[1-6]/dockerfiles, create a new Dockerfile to build a custom MySQL image using the following parameters and details in the training manual:
 <ol>
   <li>Version : latest</li>
@@ -163,8 +183,7 @@ $ su - student
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
-$ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]/student[1-6]/dockerfiles
-$ vi Dockerfile
+$ vi student1/dockerfiles/Dockerfile
 (...)
 FROM mysql:latest
 RUN apt-get update && apt-get install -y vim
