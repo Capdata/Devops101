@@ -159,7 +159,7 @@ $ su - student
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
-$ cd ~/FORMATION/DEVOPS101/GIT/Devops101/dockerfiles
+$ cd ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]/student[1-6]/dockerfiles
 $ vi Dockerfile
 (...)
 FROM mysql:latest
