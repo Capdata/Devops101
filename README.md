@@ -342,46 +342,16 @@ mysql> show tables from sakila ;
 +----------------------------+
 23 rows in set (0.00 sec)
 </pre>
-- To test the Python code against the new MySQL docker container, create a new python container by pulling an python:latest image from the public repository and starting named agent1 :
+- To test the Python code against the new MySQL docker container, create a new container by :
+  <ol>Creating an image from python:latest :</ol>
 <pre>
-$ $ sudo docker pull python:latest
-latest: Pulling from library/python
-785ef8b9b236: Pull complete
-5a6dad8f55ae: Pull complete
-bd36c7bfe5f4: Pull complete
-4d207285f6d2: Pull complete
-9402da1694b8: Pull complete
-9bdbf45d01af: Pull complete
-dd8b7ef87a9d: Pull complete
-4de52e7027c5: Pull complete
-Digest: sha256:9a1b705aecedc76e8bf87dfca091d7093df3f2dd4765af6c250134ce4298a584
-Status: Downloaded newer image for python:latest
-docker.io/library/python:latest
+  
+</pre>  
 
-$ sudo docker image ls python
-REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
-python       latest    608c79ebc6d5   7 weeks ago   1.01GB
+  <ol>Creating a /var/lib/myagent directory inside the container :</ol>
+  <ol>Importing the agent scripts under ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]/student[1-6]/agent into /var/lib/myagent:</ol>
+  <ol>Building the image and running a new container named agent1 on top of it:</ol>
 
-$ sudo docker run -tid --name agent1 python:latest
-2be049a1b85b3af5cb89bbe2752eb0390ebd9250824bb484003e9068e0685853
-
-$ sudo docker ps -a
-CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS         PORTS                 NAMES
-2be049a1b85b   python:latest                 "python3"                7 seconds ago   Up 6 seconds                         agent1
-ea7438ce3304   student1/mysqlserver:latest   "docker-entrypoint.s…"   3 hours ago     Up 3 hours     3306/tcp, 33060/tcp   mysqlserver1
-
-
-</pre>
-
-- 
-
-- Observe layer history and try to optimize the image
-
-- Run a simple Ubuntu 20.04 docker container from the public repository 
-
-- Connect to the container and get the MySQL monitoring script
-
-- Test the script and check connection to MySQL Database 
 
 # LAB 3 : ANSIBLE
 - Deploy a new MySQL instance with ANSIBLE
