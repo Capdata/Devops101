@@ -185,12 +185,12 @@ CMD ["mysqld"]
 <pre>
 $ sudo docker build -t student[1-6]/mysqlserver .
 [+] Building 21.5s (10/10) FINISHED
- => [internal] load build definition from Dockerfile                                                                                                                                                
- => transferring dockerfile: 305B                                                                                                                                                                 
- => [internal] load .dockerignore                                                                                                                                                                 
- => => transferring context: 2B                                                                                                                                                                  
- => [internal] load metadata for docker.io/library/mysql:8-debian                                                                                                                                
- => [1/5] FROM docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                                          
+ => [internal] load build definition from Dockerfile                                                                                                                        
+ => transferring dockerfile: 305B                                                                                                                                           
+ => [internal] load .dockerignore                                                                                                                                           
+ => => transferring context: 2B                                                                                                                                             
+ => [internal] load metadata for docker.io/library/mysql:8-debian                                                                                                           
+ => [1/5] FROM docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33                                                     
  => resolve docker.io/library/mysql:8-debian@sha256:49f4fcb0087318aa1c222c7e8ceacbb541cdc457c6307d45e6ee4313f4902e33 
 (...)
 
@@ -345,7 +345,18 @@ mysql> show tables from sakila ;
 - To test the Python code against the new MySQL docker container, create a new container by :
   <ol>Creating an image from python:latest :</ol>
 <pre>
-  
+$ cd ~/FORMATION/DEVOPS101/DOCKER
+$ vi Dockerfile
+(...)
+FROM python:latest
+RUN apt-get update && apt-get install -y python3-pip
+RUN pip install mysqlclient
+RUN mkdir /var/lib/myagent
+RUN git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1-6].git 
+RUN cd devops_student[1-6] && git checkout MYSQL_1
+RUN cp -pR student[1-6]/* /var/lib/myagent/
+
+$ sudo docker build -t student1/myagent .
 </pre>  
 
   <ol>Creating a /var/lib/myagent directory inside the container :</ol>
