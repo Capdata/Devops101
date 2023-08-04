@@ -242,7 +242,106 @@ $ sudo docker ps
 CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                 NAMES
 8f5d8cbe3d09   student1/mysqlserver:latest   "docker-entrypoint.s…"   16 seconds ago   Up 15 seconds   3306/tcp, 33060/tcp   mysqlserver1
 </pre>
+- Check the container logs to see of everything starts as expected:
+<pre>
+$ watch sudo docker logs mysqlserver1
+(...) 
+2023-08-04 09:13:54+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.34-1debian11 started.
+2023-08-04 09:13:55+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2023-08-04 09:13:55+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.34-1debian11 started.
+2023-08-04 09:13:55+00:00 [Note] [Entrypoint]: Initializing database files
+2023-08-04T09:13:55.624784Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+2023-08-04T09:13:55.626764Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.34) initializing of server in progress as process 79
+2023-08-04T09:13:55.664640Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-08-04T09:13:56.732508Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-08-04T09:13:58.832867Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2023-08-04 09:14:03+00:00 [Note] [Entrypoint]: Database files initialized
+2023-08-04 09:14:03+00:00 [Note] [Entrypoint]: Starting temporary server
+mysqld will log errors to /mysqldata/ea7438ce3304.err
+mysqld is running as pid 121
+2023-08-04 09:14:04+00:00 [Note] [Entrypoint]: Temporary server started.
+Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/leap-seconds.list' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+2023-08-04 09:14:07+00:00 [Note] [Entrypoint]: Creating database mysql
+2023-08-04 09:14:07+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/1_sakila-schema.sql
+2023-08-04 09:14:08+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/2_sakila-data.sql
+2023-08-04 09:14:11+00:00 [Warn] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/README.md
+2023-08-04 09:14:11+00:00 [Note] [Entrypoint]: Stopping temporary server
+2023-08-04 09:14:14+00:00 [Note] [Entrypoint]: Temporary server stopped
+2023-08-04 09:14:14+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
+2023-08-04T09:14:14.964493Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+2023-08-04T09:14:14.964621Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.34) starting as process 1
+2023-08-04T09:14:15.002460Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-08-04T09:14:15.448862Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-08-04T09:14:15.848283Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2023-08-04T09:14:15.848701Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2023-08-04T09:14:15.853677Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2023-08-04T09:14:15.916321Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2023-08-04T09:14:15.916904Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.34'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+</pre>
 - Connect to the docker container and connect to the MySQL database server and inspect the contents by listings databases and objects.  
+<pre>
+$ sudo docker exec -it mysqlserver1 bash
+root@ea7438ce3304:/#  mysql --user=root --socket=/var/run/mysqld/mysqld.sock --password
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.34 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
++--------------------+
+5 rows in set (0.02 sec)
+
+mysql> show tables from sakila ;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.00 sec)
+</pre>
 
 - Create a persistent volume for MySQL
 <pre>
