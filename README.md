@@ -357,6 +357,18 @@ RUN cd devops_student[1-6] && git checkout MYSQL_1
 RUN cp -pR student[1-6]/* /var/lib/myagent/
 
 $ sudo docker build -t student1/myagent .
+[+] Building 5.5s (11/11) FINISHED
+(...)
+ => => naming to docker.io/student1/myagent
+
+$ sudo docker image ls
+REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
+student1/myagent       latest    7ba54b321dc7   4 minutes ago   1.11GB
+student1/mysqlserver   latest    8e8017633e91   21 hours ago    659MB
+(...)
+
+$ sudo docker run -tid --name agent1 student1/myagent
+0812e0d714144012d6abb2b04afbacafc3f3ccccfea60fc65ae6674ed6f80fe6
 </pre>  
 
   <ol>Creating a /var/lib/myagent directory inside the container :</ol>
