@@ -461,8 +461,11 @@ lxc list
 | managednode | RUNNING | 10.108.127.170 (eth0) | fd42:55eb:ffed:5765:216:3eff:fe81:81f6 (eth0) | CONTAINER | 0         |
 +-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
 </pre>
-- Connect to the managednode container, check the python and python3 version and setup a group and user named both ansible as explained in the training:
+- Connect to the managednode container, check python3 version and setup a group and user named both ansible as explained in the training:
 <pre>
+root@managednode:~$ python3 --version
+Python 3.8.10
+
 root@managednode:~$ groupadd ansible
 root@managednode:~$ useradd -d /home/ansible -g ansible -m -s /bin/bash ansible
 root@managednode:~$ passwd ansible
