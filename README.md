@@ -373,10 +373,10 @@ RUN echo "172.17.0.2  mysqlserver1" >> /etc/hosts
 </pre>
 - Build the image and run the container :
 <pre>
-$ sudo docker build -t student1/myagent .
+$ sudo docker build -t student[1-6]/myagent .
 [+] Building 5.5s (11/11) FINISHED
 (...)
- => => naming to docker.io/student1/myagent
+ => => naming to docker.io/student[1-6]/myagent
 
 $ sudo docker image ls
 REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
@@ -384,7 +384,7 @@ student1/myagent       latest    7ba54b321dc7   4 minutes ago   1.11GB
 student1/mysqlserver   latest    8e8017633e91   21 hours ago    659MB
 (...)
 
-$ sudo docker run -tid --name agent1 student1/myagent
+$ sudo docker run -tid --name agent1 student[1-6]/myagent
 0812e0d714144012d6abb2b04afbacafc3f3ccccfea60fc65ae6674ed6f80fe6
 </pre>  
 
