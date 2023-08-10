@@ -581,4 +581,291 @@ managednode.lxd | SUCCESS => {
     "ping": "pong"
 }
 </pre>
+
+## Step 2 : set up roles, playbooks, vaults and jinja2 templates to deploy a MySQL instance in the managednode
+
+- 3 roles will be used:
+<ol>- rl_prepa_install_mysql : prerequisites</ol>
+<ol>- rl_install_MySQL : MySQL setup</ol>
+<ol>- rl_postinstall_MySQL : post-installation tasks</ol>
+
+- Such as : 
+<pre>
+/etc/ansible/group_vars/all/
+	|__ secret.yml		# vault password for user root@localhost 
+	|__ mysql_vars.yml		# MySQL configuration variables for Jinja2
+
+~/Install_MySQL/
+	|__ playbook_install_MySQL.yml  # Main playbook 
+
+	|__ rl_prepa_install_mysql
+		|__ tasks/main.yml		 # preparation
+
+	|__ rl_install_MySQL
+		|__ tasks/main.yml		 # setup
+
+	|__ rl_postinstall_MySQL
+		|__ tasks/main.yml		 # post-setup
+		|__ templates/my.cnf.j2	 # Jinja2 template for MySQL configuration file
+		|__ handlers/main.yml	 # handling post-setup tasks
+</pre>
+
+### Configuring the inventory 
+
+- Create the directories for /etc/ansible/ group_vars and host_vars, and create a minimal inventory.yml file with:
+<ol>- managednode in the all: group</ol>
+<ol>- python3 as the default python interpreter: group</ol>
+<pre>
+root@controlnode:~$ mkdir -p /etc/ansible/group_vars /etc/ansible/host_vars
+vi /etc/ansible/inventory.yml
+(...)
+all:
+  hosts:
+    managednode.lxd:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+</pre>
+
+- And test the ping module using the inventory.yml as inventory:
+<pre>
+root@controlnode:~$ ansible -u ansible -i /etc/ansible/inventory.yml all -m ping
+managednode.lxd | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+</pre>
+
+### Setting up community module for MySQL:
+<pre>
+root@controlnode:~$ ansible-galaxy collection install community.mysql
+Process install dependency map
+Starting collection install process
+Installing 'community.mysql:3.7.2' to '/root/.ansible/collections/ansible_collections/community/mysql'
+</pre>
+
+### Create directory structure for roles and files:
+<pre>
+root@controlnode:~$ mkdir ~/Install_MySQL
+root@controlnode:~$ ansible-galaxy init ~/Install_MySQL/rl_prepa_install_mysql
+- Role /root/Install_MySQL/rl_prepa_install_mysql was created successfully
+root@controlnode:~$ ansible-galaxy init ~/Install_MySQL/rl_install_MySQL
+- Role /root/Install_MySQL/rl_install_MySQL was created successfully
+root@controlnode:~$ ansible-galaxy init ~/Install_MySQL/rl_postinstall_MySQL
+- Role /root/Install_MySQL/rl_postinstall_MySQL was created successfully
+</pre>
+
+### Create the secret vault to store MySQL's root@localhost password:
+<pre>
+root@controlnode:~$ vi ~/.vault
+(...)
+capdata
+
+root@controlnode:~$ chmod 600 ~/.vault
+
+root@controlnode:~$ ansible-vault create  --vault-id ~/.vault /etc/ansible/group_vars/all/secret.yml
+[WARNING]: /etc/ansible/group_vars/all does not exist, creating...
+Vault password: ******
+rootpassword: "******"
+</pre>
+
+### Create the main playbook:
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/playbook_install_MySQL.yml
+(...)
+- name: Playbook deploiement et configuration MySQL 8.0
+  hosts: all
+  remote_user: ansible
+  become: yes
+  roles:
+  - rl_prepa_install_mysql
+  - rl_install_MySQL
+  - rl_postinstall_MySQL
+</pre>
+
+### Create the Role 1) for rl_prepa_install_mysql :
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/rl_prepa_install_mysql/tasks/main.yml
+(...)
+- name: installation GNUPG2
+  apt:
+    name: gnupg2
+    cache_valid_time: 3600
+    state: present
+- name: installation CURL
+  apt:
+    name: curl
+    cache_valid_time: 3600
+    state: present
+- name: installation python3-pip
+  apt:
+    name: python3-pip
+    cache_valid_time: 3600
+    state: present
+- name: installation PyMySQL via PIP
+  pip:
+    name: PyMySQL
+- name: Recup distro UBUNTU dans une variable
+  shell: lsb_release -sc
+  register: __distro_ubuntu
+- name: Recuperation des packages .DEB pour le REPO percona
+  shell: wget https://repo.percona.com/apt/percona-release_latest.{{ __distro_ubuntu.stdout }}_all.deb -P /tmp/
+- name: installation package DEB pour installer le repo Percona
+  apt:
+    deb: /tmp/percona-release_latest.{{ __distro_ubuntu.stdout }}_all.deb
+- name: Mise a jour du cache APT
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+- name: activation du repository Percona avec percona-release
+  shell: percona-release setup ps80
+</pre>
+
+### Create the Role 2) for rl_install_MySQL :
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/rl_install_MySQL/tasks/main.yml
+(...)
+- name: Install Percona-Server
+  apt:
+    name: percona-server-server
+- name: configuration du service systemd
+  systemd:
+    name: mysql.service
+    state: started
+    enabled: yes
+- name: reboot pour tester le redémarrage du service
+  reboot:
+    msg: "Attention redemarrage verif service MySQL dans 5 secondes !!!"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 5
+    test_command: uptime
+</pre>
+
+### Create the Role 3) for rl_postinstall_MySQL :
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/rl_postinstall_MySQL/tasks/main.yml
+(...)
+- name : verifier si le service est bien demarre
+  systemd:
+    name: mysql.service
+    state: started
+
+- name: changer le plugin d authentification pour root@localhost
+  shell: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost";'
+
+- name: Flush Privs
+  shell: mysql -u root -e 'flush privileges;'
+
+- name: Changer le mot de passe de root
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''
+    name: 'root'
+    password: "{{ rootpassword }}"
+    state: present
+
+- name: Appliquer la configuration via le template j2
+  template:
+    src: my.cnf.j2
+    dest: /etc/mysql/my.cnf
+    owner: root
+    mode: 0644
+  notify:
+  - restart_percona
+</pre>
+
+### Create the Jinja2 template for MySQL configuration file:
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/rl_postinstall_MySQL/templates/my.cnf.j2
+(...)
+[mysqld]
+pid_file        = {{ pid_file }}
+socket          = {{ socket }}
+port            = {{ port }}
+datadir         = {{ datadir }}
+log_error       = {{ log_error }}
+log_bin         = {{ log_bin }}
+innodb_buffer_pool_size = {{ innodb_buffer_pool_size }}
+</pre>
+
+### Create the mysql_vars.yml to :
+<pre>
+root@controlnode:~$ vi /etc/ansible/group_vars/all/mysql_vars.yml
+(...)
+pid_file: /var/lib/mysql/mysql.pid
+socket: /var/lib/mysql/mysqld.sock
+port: 3306
+datadir: /var/lib/mysql
+log_error: /var/log/mysql/mysql_error.log
+log_bin: mysql_bin
+innodb_buffer_pool_size: 33554432
+</pre>
+
+### Finally create the handler to handle post-setup tasks:
+<pre>
+root@controlnode:~$ vi ~/Install_MySQL/rl_postinstall_MySQL/handlers/main.yml
+(...)
+- name: restart_percona
+  systemd:
+    name: mysql.service
+    state: restarted
+</pre>
+
+### And execute the playbook to create the mysql.service on managednode:
+<pre>
+ ansible-playbook -i /etc/ansible/inventory.yml --vault-id ~/.vault playbook_install_MySQL.yml
+
+PLAY [Playbook deploiement et configuration MySQL 8.0] **************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : installation GNUPG2] *****************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : installation CURL] *******************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : installation python3-pip] ************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : installation PyMySQL via PIP] ********************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : Recup distro UBUNTU dans une variable] ***********************************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : Recuperation des packages .DEB pour le REPO percona] *********************************************************************************************************************************************************
+[WARNING]: Consider using the get_url or uri module rather than running 'wget'.  If you need to use command because get_url or uri is insufficient you can add 'warn: false' to this command task or set 'command_warnings=False' in
+ansible.cfg to get rid of this message.
+changed: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : installation package DEB pour installer le repo Percona] *****************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : Mise a jour du cache APT] ************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_prepa_install_mysql : activation du repository Percona avec percona-release] *******************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+TASK [rl_install_MySQL : Install Percona-Server] ********************************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_install_MySQL : configuration du service systemd] **********************************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_install_MySQL : reboot pour tester le redémarrage du service] **********************************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+TASK [rl_postinstall_MySQL : verifier si le service est bien demarre] ***********************************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+TASK [rl_postinstall_MySQL : changer le plugin d authentification pour root@localhost] ******************************************************************************************************************************************************
+ok: [managednode.lxd]
+
+PLAY RECAP **********************************************************************************************************************************************************************************************************************************
+managednode.lxd            : ok=15   changed=15    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+</pre>
 # LAB 4 : PROMETHEUS & GRAFANA
