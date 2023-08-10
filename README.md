@@ -562,7 +562,7 @@ and check to make sure that only the key(s) you wanted were added.
 
 </pre>
 
-# Test the connection : 
+- Test the connection : 
 The passphrase should not be required anymore
 <pre>
 root@controlnode:~$ ssh ansible@managednode.lxd -n date
