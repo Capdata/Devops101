@@ -13,7 +13,7 @@
 
 # PRIVATE IMPORTS -----------------------------------------------------------------------------------------------
 from my.myconnect import alldbmyconnection
-from my.myGetVersion import  myGetVersion
+from my.myGetVersion import myGetVersion
 
 # BUILTIN IMPORTS -----------------------------------------------------------------------------------------------
 import sys, getopt, re, string, os.path
@@ -21,15 +21,15 @@ import sys, getopt, re, string, os.path
 # --------------------------------------------------------------------------------------------------------------
 # FUNCTION usage()
 def usage():
-    print "# ================================================================================================== \n" \
-        " my_healthcheck.py \n" \
-        " Object : connects to MySQL and checks instance health \n" \
-        " \n" \
-        " -h / --help       : help & usage\n" \
-        " -c / --configfile \n" \
-          " \n"     \
-        "Example : python3 my_healthcheck.py --configfile=/full/path/to/my/cs.xml"
-    print "# -------------------------------------------------------------------------------------------------- \n" \
+    print ("# ================================================================================================== \n"  \
+    " my_healthcheck.py \n"  \
+    " Object : connects to MySQL and checks instance health \n"  \
+    " \n"  \
+    " -h / --help       : help & usage\n"  \
+    " -c / --configfile \n"  \
+    " \n"      \
+    "Example : python3 my_healthcheck.py --configfile=/full/path/to/my/cs.xml \n" \
+    "# -------------------------------------------------------------------------------------------------- \n")
 
     sys.exit(3)
 
@@ -51,23 +51,18 @@ def main():
                 secretfile = arg
 
     except getopt.GetoptError as err:
-        print str(err)
+        print (str(err))
         usage()
-    
+
     if secretfile == "":
         usage()
 
     mydbconn = alldbmyconnection(secretfile)
-    myGetVersion = myGetVersion()
-    myGetVersionRes = mydbconn.runquery(myGetVersion.myGetVersionSQL)
+    I_myGetVersion = myGetVersion()
+    myGetVersionRes = mydbconn.runquery(I_myGetVersion.myGetVersionSQL)
+    if myGetVersionRes:
+        print ("Version detectee : " + str(myGetVersionRes))
 
-    for row in myGetVersionRes:
-        try:
-            myversion = row['myversion']
-            print "Version detectee : " + myversion
-
-         except BaseException as err:
-            print err.message
     return
 
 #  -------------------------------------------------------------------------------------------------------------
