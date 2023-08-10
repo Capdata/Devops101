@@ -562,9 +562,12 @@ and check to make sure that only the key(s) you wanted were added.
 
 </pre>
 
-# Test the connection : the passphrase should not be required anymore
+# Test the connection : 
+The passphrase should not be required anymore
+<pre>
 root@controlnode:~$ ssh ansible@managednode.lxd -n date
 Thu Aug 10 11:06:20 UTC 2023
+</pre>
 </pre>
 
 - Finally from the controlnode container, test a ansible ping to the managed node to check that the connection is OK:
