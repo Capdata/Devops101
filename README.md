@@ -399,7 +399,7 @@ Version detectee : ({'version()': '8.0.34'},)
 # LAB 3 : ANSIBLE
 Deploy a new MySQL instance with ANSIBLE
 
-## Step 1: setting up the node and configure connection 
+## Step 1: setting up the nodes and configure connection 
 ### Control Node creation & configuration
 - Prepare the first LXC container to host the Control Node by launching an ubuntu:20.04 image named controlnode using LXC client command line:
 <pre>
