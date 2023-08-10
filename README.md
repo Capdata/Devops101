@@ -397,6 +397,200 @@ Version detectee : ({'version()': '8.0.34'},)
 </pre>
 
 # LAB 3 : ANSIBLE
-- Deploy a new MySQL instance with ANSIBLE
-- 
+Deploy a new MySQL instance with ANSIBLE
+
+## Step 1: setting up the node and configure connection 
+### Control Node creation & configuration
+- Prepare the first LXC container to host the Control Node by launching an ubuntu:20.04 image named controlnode using LXC client command line:
+<pre>
+$ lxc launch ubuntu:20.04 controlnode
+Creating controlnode
+Starting controlnode
+
+$ lxc list controlnode
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+|    NAME     |  STATE  |         IPV4          |                     IPV6                      |   TYPE    | SNAPSHOTS |
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+| controlnode | RUNNING | 10.108.127.196 (eth0) | fd42:55eb:ffed:5765:216:3eff:fe3d:ffc4 (eth0) | CONTAINER | 0         |
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+</pre>
+
+- Connect to the controlnode container and update the apt package local repo, then setup python3-pip : 
+<pre>$ lxc exec controlnode bash
+root@controlnode:~$ apt-get update
+(...)
+root@controlnode:~$ apt-get install -y python3-pip
+(...)
+</pre>
+
+- Setup ansible version=2.9.9 using PIP:
+<pre>
+root@controlnode:~$ pip3 install ansible==2.9.9
+Collecting ansible==2.9.9
+  Downloading ansible-2.9.9.tar.gz (14.2 MB)
+     |████████████████████████████████| 14.2 MB 14.5 MB/s
+(...)
+root@controlnode:~$ ansible --version
+ansible 2.9.9
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.8/dist-packages/ansible
+  executable location = /usr/local/bin/ansible
+  python version = 3.8.10 (default, May 26 2023, 14:05:08) [GCC 9.4.0]
+</pre>
+- Exit from the controlnode container
+<pre>
+root@controlnode:~$ exit
+exit
+</pre>
+
+
+### Managed Node creation & configuration
+- Prepare a second LXC container to host the Managed Node by launching another ubuntu:20.04 image named managednode using LXC client command line:
+<pre>
+$ lxc launch ubuntu:20.04 managednode
+Creating managednode
+Starting managednode
+
+lxc list
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+|    NAME     |  STATE  |         IPV4          |                     IPV6                      |   TYPE    | SNAPSHOTS |
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+| controlnode | RUNNING | 10.108.127.196 (eth0) | fd42:55eb:ffed:5765:216:3eff:fe3d:ffc4 (eth0) | CONTAINER | 0         |
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+| managednode | RUNNING | 10.108.127.170 (eth0) | fd42:55eb:ffed:5765:216:3eff:fe81:81f6 (eth0) | CONTAINER | 0         |
++-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
+</pre>
+- Connect to the managednode container, check the python and python3 version and setup a group and user named both ansible as explained in the training:
+<pre>
+root@managednode:~$ groupadd ansible
+root@managednode:~$ useradd -d /home/ansible -g ansible -m -s /bin/bash ansible
+root@managednode:~$ passwd ansible
+New password: ******
+Retype new password: ******
+passwd: password updated successfully
+</pre>
+
+- Modify /etc/sudoers to allow ansible sudo any command without password prompting and check by calling apt package manager from the ansible user context:
+<pre>
+root@managednode:~$ vi /etc/sudoers
+(...)
+# ANSIBLE
+%ansible	ALL=(ALL)	NOPASSWD: ALL
+
+root@managednode:~$ su - ansible
+ansible@managednode:~$ sudo apt-cache search mysql-server
+mysql-server - MySQL database server (metapackage depending on the latest version)
+mysql-server-8.0 - MySQL database server binaries and system database setup
+mysql-server-core-8.0 - MySQL database server binaries
+</pre>
+- Exit from the managednode container:
+<pre>
+ansible@managednode:~$ exit
+logout
+root@managednode:~$ exit
+exit
+</pre>
+
+### Setting up SSH connection
+- First we need to allow the managed node SSH server to allow password and publickey authentication methods:
+<pre>
+$ lxc exec managednode bash
+root@managednode:~$ vi /etc/ssh/sshd_config
+(...)
+PubkeyAuthentication yes
+PasswordAuthentication yes
+(...)
+
+root@managednode:~$ systemctl restart ssh.service
+root@managednode:~$ systemctl status ssh.service
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2023-08-10 09:52:41 UTC; 8s ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+    Process: 1092 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+   Main PID: 1093 (sshd)
+      Tasks: 1 (limit: 1126)
+     Memory: 1.0M
+     CGroup: /system.slice/ssh.service
+             └─1093 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+
+Aug 10 09:52:41 managednode systemd[1]: Starting OpenBSD Secure Shell server...
+Aug 10 09:52:41 managednode sshd[1093]: Server listening on 0.0.0.0 port 22.
+Aug 10 09:52:41 managednode sshd[1093]: Server listening on :: port 22.
+Aug 10 09:52:41 managednode systemd[1]: Started OpenBSD Secure Shell server.
+</pre>
+
+- Then we need to generate SSH ecdsa keys on the controlnode and copy the public key over to the managednode to allow controle node -> managed node communication:
+<pre>
+root@controlnode:~$ ssh-keygen -t ecdsa -b 521
+Generating public/private ecdsa key pair.
+Enter file in which to save the key (/root/.ssh/id_ecdsa):
+Enter passphrase (empty for no passphrase): ******
+Enter same passphrase again: ******
+Your identification has been saved in /root/.ssh/id_ecdsa
+Your public key has been saved in /root/.ssh/id_ecdsa.pub
+The key fingerprint is:
+SHA256:JN8vYv3Ik7elm4b/qiYCovetZ+QVtroeonYPs9M4he8 root@controlnode
+The key's randomart image is:
++---[ECDSA 521]---+
+|                 |
+|                 |
+|      . .        |
+|       +o.       |
+|     . .So.      |
+|  . o o o. .     |
+| . .+O.oo oo. .  |
+|. o.=*Oo.o=+o+   |
+| o.o+XEo o+*O=.  |
++----[SHA256]-----+
+
+root@controlnode:~$ ssh-copy-id ansible@managednode.lxd
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_ecdsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+ansible@managednode.lxd's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'ansible@managednode.lxd'"
+and check to make sure that only the key(s) you wanted were added.
+
+</pre>
+
+- In the controlnode container, run an ssh-agent as daemon and test the connection to check if the passphrase is not required
+
+<pre>
+$ lxc exec controlnode bash
+
+root@controlnode:~$ ssh-add -l
+Could not open a connection to your authentication agent.
+
+root@controlnode:~$ eval $(ssh-agent)
+Agent pid 6938
+
+root@controlnode:~$ ssh-add
+Enter passphrase for /root/.ssh/id_ecdsa: ******
+Identity added: /root/.ssh/id_ecdsa (root@controlnode)
+
+root@controlnode:~$ ssh-add -l
+521 SHA256:JN8vYv3Ik7elm4b/qiYCovetZ+QVtroeonYPs9M4he8 root@controlnode (ECDSA)
+
+# Test the connection : the passphrase should not be required anymore
+root@controlnode:~$ ssh ansible@managednode.lxd -n date
+Thu Aug 10 11:06:20 UTC 2023
+</pre>
+
+- Finally from the controlnode container, test a ansible ping to the managed node to check that the connection is OK:
+<pre>
+root@controlnode:~$ ansible -u ansible --inventory "managednode.lxd," all -m ping
+managednode.lxd | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+</pre>
 # LAB 4 : PROMETHEUS & GRAFANA
