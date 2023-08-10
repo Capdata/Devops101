@@ -525,13 +525,13 @@ Aug 10 09:52:41 managednode sshd[1093]: Server listening on :: port 22.
 Aug 10 09:52:41 managednode systemd[1]: Started OpenBSD Secure Shell server.
 </pre>
 
-- Then we need to generate SSH ecdsa keys on the controlnode and copy the public key over to the managednode to allow controle node -> managed node communication:
+- Then we need to generate SSH ecdsa keys on the controlnode and copy the public key over to the managednode to allow controle node -> managed node communication (don't put a passphrase):
 <pre>
 root@controlnode:~$ ssh-keygen -t ecdsa -b 521
 Generating public/private ecdsa key pair.
 Enter file in which to save the key (/root/.ssh/id_ecdsa):
-Enter passphrase (empty for no passphrase): ******
-Enter same passphrase again: ******
+Enter passphrase (empty for no passphrase): [DON'T]
+Enter same passphrase again: [DON'T]
 Your identification has been saved in /root/.ssh/id_ecdsa
 Your public key has been saved in /root/.ssh/id_ecdsa.pub
 The key fingerprint is:
@@ -561,24 +561,6 @@ Now try logging into the machine, with:   "ssh 'ansible@managednode.lxd'"
 and check to make sure that only the key(s) you wanted were added.
 
 </pre>
-
-- In the controlnode container, run an ssh-agent as daemon and test the connection to check if the passphrase is not required
-
-<pre>
-$ lxc exec controlnode bash
-
-root@controlnode:~$ ssh-add -l
-Could not open a connection to your authentication agent.
-
-root@controlnode:~$ eval $(ssh-agent)
-Agent pid 6938
-
-root@controlnode:~$ ssh-add
-Enter passphrase for /root/.ssh/id_ecdsa: ******
-Identity added: /root/.ssh/id_ecdsa (root@controlnode)
-
-root@controlnode:~$ ssh-add -l
-521 SHA256:JN8vYv3Ik7elm4b/qiYCovetZ+QVtroeonYPs9M4he8 root@controlnode (ECDSA)
 
 # Test the connection : the passphrase should not be required anymore
 root@controlnode:~$ ssh ansible@managednode.lxd -n date
