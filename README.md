@@ -370,7 +370,9 @@ RUN git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1
 RUN cd devops_student[1-6] && git checkout MYSQL_1
 RUN cp -pR student[1-6]/* /var/lib/myagent/
 RUN echo "172.17.0.2  mysqlserver1" >> /etc/hosts
-
+</pre>
+- Build the image and run the container :
+<pre>
 $ sudo docker build -t student1/myagent .
 [+] Building 5.5s (11/11) FINISHED
 (...)
