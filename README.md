@@ -167,7 +167,7 @@ $ git branch -a
 </ol>
 ... and use also the information as per the student[1-6]/my/cs.xml to expose TCP port, set username, password and database environment variables. 
 <pre>
-$ cd student1/dockerfiles
+$ cd student[1-6]/dockerfiles
 $ vi Dockerfile
 (...)
 FROM mysql:8-debian
@@ -196,12 +196,12 @@ $ sudo docker build -t student[1-6]/mysqlserver .
 
 $ sudo docker image ls
 REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
-student1/mysqlserver   latest    01e39e90335d   4 minutes ago   659MB
+student[1-6]/mysqlserver   latest    01e39e90335d   4 minutes ago   659MB
 </pre> 
 
 - Observe the contents and layers of the image created 
 <pre>
-$ sudo docker image history student1/mysqlserver
+$ sudo docker image history student[1-6]/mysqlserver
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
 01e39e90335d   15 minutes ago   CMD ["mysqld"]                                  0B        buildkit.dockerfile.v0
 <missing>      15 minutes ago   EXPOSE map[3306/tcp:{}]                         0B        buildkit.dockerfile.v0
@@ -235,12 +235,12 @@ IMAGE          CREATED          CREATED BY                                      
 </pre>
 - Run the image in a container named mysqlserver1:
 <pre>
-$ sudo docker run -tid --name mysqlserver1 student1/mysqlserver:latest
+$ sudo docker run -tid --name mysqlserver1 student[1-6]/mysqlserver:latest
 8f5d8cbe3d09d8a7238325947218ac2056f14e5d1435a379f34b58b825ac2dd0
 
 $ sudo docker ps
 CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                 NAMES
-8f5d8cbe3d09   student1/mysqlserver:latest   "docker-entrypoint.s…"   16 seconds ago   Up 15 seconds   3306/tcp, 33060/tcp   mysqlserver1
+8f5d8cbe3d09   student[1-6]/mysqlserver:latest   "docker-entrypoint.s…"   16 seconds ago   Up 15 seconds   3306/tcp, 33060/tcp   mysqlserver1
 </pre>
 - Check the container logs to see of everything starts as expected:
 <pre>
@@ -380,8 +380,8 @@ $ sudo docker build -t student[1-6]/myagent .
 
 $ sudo docker image ls
 REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
-student1/myagent       latest    7ba54b321dc7   4 minutes ago   1.11GB
-student1/mysqlserver   latest    8e8017633e91   21 hours ago    659MB
+student[1-6]/myagent       latest    7ba54b321dc7   4 minutes ago   1.11GB
+student[1-6]/mysqlserver   latest    8e8017633e91   21 hours ago    659MB
 (...)
 
 $ sudo docker run -tid --name agent1 student[1-6]/myagent
