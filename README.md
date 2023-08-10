@@ -345,7 +345,7 @@ mysql> show tables from sakila ;
 - To test the Python code against the new MySQL docker container, create a new container by :
   <ol>- creating an image from python:latest</ol>
   <ol>- setup python3-pip using apt package manager</ol>
-  <ol>- setup mysqlclient using pip</ol>
+  <ol>- setup mysqlclient and lxml python packages using pip</ol>
   <ol>- create a directory named /var/lib/myagent</ol>
   <ol>- clone your devops_student[1-6] repo and checkout into branch MYSQL_1</ol>
   <ol>- copy the contents of the local repo over /var/lib/myagent</ol>
@@ -364,7 +364,7 @@ $ vi Dockerfile
 (...)
 FROM python:latest
 RUN apt-get update && apt-get install -y python3-pip
-RUN pip install mysqlclient
+RUN pip install mysqlclient lxml
 RUN mkdir /var/lib/myagent
 RUN git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1-6].git 
 RUN cd devops_student[1-6] && git checkout MYSQL_1
