@@ -343,8 +343,22 @@ mysql> show tables from sakila ;
 23 rows in set (0.00 sec)
 </pre>
 - To test the Python code against the new MySQL docker container, create a new container by :
-  <ol>Creating an image from python:latest :</ol>
+  <ol>Creating an image from python:latest</ol>
+  <ol>setup python3-pip using apt package manager</ol>
+  <ol>setup mysqlclient using pip</ol>
+  <ol>create a directory named /var/lib/myagent</ol>
+  <ol>clone your devops_student[1-6] repo and checkout into branch MYSQL_1</ol>
+  <ol>copy the contents of the local repo over /var/lib/myagent</ol>
+  <ol>get the IP address of the mysqlserver1 container</ol>
+  <ol>add a row identifying mysqlserver1 by IP at the end of /etc/hosts </ol>
 <pre>
+# First get the IP Address of mysqlserver1
+$ sudo docker inspect mysqlserver1 | grep -i IPAddr
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.2",
+                    "IPAddress": "172.17.0.2",
+
+# Then create the Dockerfile accordingly:
 $ cd ~/FORMATION/DEVOPS101/DOCKER
 $ vi Dockerfile
 (...)
@@ -355,6 +369,7 @@ RUN mkdir /var/lib/myagent
 RUN git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1-6].git 
 RUN cd devops_student[1-6] && git checkout MYSQL_1
 RUN cp -pR student[1-6]/* /var/lib/myagent/
+RUN echo "172.17.0.2  mysqlserver1" >> /etc/hosts
 
 $ sudo docker build -t student1/myagent .
 [+] Building 5.5s (11/11) FINISHED
@@ -371,10 +386,13 @@ $ sudo docker run -tid --name agent1 student1/myagent
 0812e0d714144012d6abb2b04afbacafc3f3ccccfea60fc65ae6674ed6f80fe6
 </pre>  
 
-  <ol>Creating a /var/lib/myagent directory inside the container :</ol>
-  <ol>Importing the agent scripts under ~/FORMATION/DEVOPS101/GIT/devops_student[1-6]/student[1-6]/agent into /var/lib/myagent:</ol>
-  <ol>Building the image and running a new container named agent1 on top of it:</ol>
-
+- And finally test the python my_healthcheck against mysqlserver1 container:
+<pre>
+$ sudo docker exec -it agent1 bash
+root@99585881bddf:/# cd /var/lib/myagent
+root@99585881bddf:/var/lib/myagent# python3 my_healthcheck.py
+Version detectee : ({'version()': '8.0.34'},)
+</pre>
 
 # LAB 3 : ANSIBLE
 - Deploy a new MySQL instance with ANSIBLE
