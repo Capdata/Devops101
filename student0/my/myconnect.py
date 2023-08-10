@@ -49,5 +49,5 @@ class alldbmyconnection:
             return rows
 
         except MySQLdb.Error as err:
-            print self.cstr
-            print err
+            print (self.cstr)
+            print (err)
