@@ -343,14 +343,14 @@ mysql> show tables from sakila ;
 23 rows in set (0.00 sec)
 </pre>
 - To test the Python code against the new MySQL docker container, create a new container by :
-  <ol>Creating an image from python:latest</ol>
-  <ol>setup python3-pip using apt package manager</ol>
-  <ol>setup mysqlclient using pip</ol>
-  <ol>create a directory named /var/lib/myagent</ol>
-  <ol>clone your devops_student[1-6] repo and checkout into branch MYSQL_1</ol>
-  <ol>copy the contents of the local repo over /var/lib/myagent</ol>
-  <ol>get the IP address of the mysqlserver1 container</ol>
-  <ol>add a row identifying mysqlserver1 by IP at the end of /etc/hosts </ol>
+  <ol>- creating an image from python:latest</ol>
+  <ol>- setup python3-pip using apt package manager</ol>
+  <ol>- setup mysqlclient using pip</ol>
+  <ol>- create a directory named /var/lib/myagent</ol>
+  <ol>- clone your devops_student[1-6] repo and checkout into branch MYSQL_1</ol>
+  <ol>- copy the contents of the local repo over /var/lib/myagent</ol>
+  <ol>- get the IP address of the mysqlserver1 container</ol>
+  <ol>- add a row identifying mysqlserver1 by IP at the end of /etc/hosts </ol>
 <pre>
 # First get the IP Address of mysqlserver1
 $ sudo docker inspect mysqlserver1 | grep -i IPAddr
