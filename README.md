@@ -814,7 +814,8 @@ root@controlnode:~$ vi ~/Install_MySQL/rl_postinstall_MySQL/handlers/main.yml
 
 ### And execute the playbook to create the mysql.service on managednode:
 <pre>
- ansible-playbook -i /etc/ansible/inventory.yml --vault-id ~/.vault playbook_install_MySQL.yml
+root@controlnode:~$ cd ~/Install_MySQL/
+root@controlnode:~$ ansible-playbook -i /etc/ansible/inventory.yml --vault-id ~/.vault playbook_install_MySQL.yml
 
 PLAY [Playbook deploiement et configuration MySQL 8.0] **************************************************************************************************************************************************************************************
 
