@@ -929,10 +929,10 @@ $ sudo docker ps -f "name=prometheus"
 CONTAINER ID   IMAGE                                  COMMAND                  CREATED         STATUS         PORTS                                       NAMES
 905a6b480c5d   quay.io/prometheus/prometheus:v2.0.0   "/bin/prometheus --c…"   3 minutes ago   Up 3 minutes   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp   prometheus
 </pre>
-- Test if available from your browser, using the public IP corresponding to your environment, eg http://<publicip>:9090/graph
+- Test if available from your browser, using the public IP corresponding to your environment, eg http://PUBLICIP:9090/graph
 ![image](https://github.com/Capdata/Devops101/assets/19890935/b1316b6e-767f-4fb8-a32c-19756ca0f205)
 
-### Add a mysql_exporter to promotheus
+### Add a mysql_exporter to prometheus
 - Create a mysql user with PROCESS, REPLICATION and SELECT privileges on all objecs in the mysqlserver1 docker container. 
 First check that the mysqlserver1 container is up 
 <pre>
@@ -959,7 +959,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql> CREATE USER 'exporter'@'%' IDENTIFIED BY 'capdata' WITH MAX_USER_CONNECTIONS 3;
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
+mysql> GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 
 mysql> FLUSH PRIVILEGES ;
