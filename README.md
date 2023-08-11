@@ -1036,7 +1036,10 @@ CONTAINER ID   IMAGE                        COMMAND     CREATED              STA
 ![image](https://github.com/Capdata/Devops101/assets/19890935/5442dd8f-49bc-41fe-b141-3acbe6409486)
 
 - And create a dashboard for mysqlserver1 with the metrics of your choice:
- 
+ ![image](https://github.com/Capdata/Devops101/assets/19890935/437f4321-8961-4a30-9e79-6cece9006635)
+
+
+
 
 
 
