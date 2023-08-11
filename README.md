@@ -171,7 +171,7 @@ $ cd student[1-6]/dockerfiles
 $ vi Dockerfile
 (...)
 FROM mysql:8-debian
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim && apt-get install -y wget
 RUN mkdir /mysqldata
 VOLUME /mysqldata
 COPY my.cnf /etc/mysql/conf.d/my.cnf
