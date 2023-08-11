@@ -1030,12 +1030,15 @@ CONTAINER ID   IMAGE                        COMMAND     CREATED              STA
 </pre>
 
 - And test the connection with your browser:
+  
 ![image](https://github.com/Capdata/Devops101/assets/19890935/10027272-739a-4654-a942-25b5a128486b)
 
 - Add a data source for mysqlserver1 :
+  
 ![image](https://github.com/Capdata/Devops101/assets/19890935/5442dd8f-49bc-41fe-b141-3acbe6409486)
 
-- And create a dashboard for mysqlserver1 with the metrics of your choice:
+- Finally create a dashboard for mysqlserver1 with the metrics of your choice:
+  
  ![image](https://github.com/Capdata/Devops101/assets/19890935/437f4321-8961-4a30-9e79-6cece9006635)
 
 
