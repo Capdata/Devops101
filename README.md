@@ -1018,5 +1018,25 @@ $ sudo docker restart prometheus
 ![image](https://github.com/Capdata/Devops101/assets/19890935/3b4432ae-e1fb-4146-ae8b-72d2648e967e) 
 ![image](https://github.com/Capdata/Devops101/assets/19890935/3e0c7201-5240-4916-8cfd-4f3e84095411) 
 
+## Adding Grafana
+- Run a last container for grafana by pulling the official image at grafana/grafana-enterprise :
+<pre>
+$ sudo docker run -d -p 3000:3000 --name=grafana grafana/grafana-enterprise
+16f619d9ddb72b1d147427ebe4e4bd92402ce092aa36bfeff24ca8ad3b496b16
+
+$ sudo docker ps -f 'name=grafana'
+CONTAINER ID   IMAGE                        COMMAND     CREATED              STATUS              PORTS                                       NAMES
+16f619d9ddb7   grafana/grafana-enterprise   "/run.sh"   About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   grafana
+</pre>
+
+- And test the connection with your browser:
+![image](https://github.com/Capdata/Devops101/assets/19890935/10027272-739a-4654-a942-25b5a128486b)
+
+- Add a data source for mysqlserver1 :
+![image](https://github.com/Capdata/Devops101/assets/19890935/5442dd8f-49bc-41fe-b141-3acbe6409486)
+
+- And create a dashboard for mysqlserver1 with the metrics of your choice:
+ 
+
 
 
