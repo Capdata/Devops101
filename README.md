@@ -956,7 +956,7 @@ affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-mysql> CREATE USER 'exporter'@'%' IDENTIFIED BY 'capdata' WITH MAX_USER_CONNECTIONS 3;
+mysql> CREATE USER 'exporter'@'%' IDENTIFIED BY '*****' WITH MAX_USER_CONNECTIONS 3;
 Query OK, 0 rows affected (0.01 sec)
 
 mysql> GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';
@@ -984,7 +984,7 @@ password=*******
 <pre>
 $ sudo docker run -d --name mysqlexporter1 -p9104:9104 \ 
 	--mount type=bind,source=/home/student/.exporter.cnf,target=/.my.cnf \ 
-	-e DATA_SOURCE_NAME="exporter:capdata@(mysqlserver1:3306)/" prom/mysqld-exporter:latest
+	-e DATA_SOURCE_NAME="exporter:*****@(mysqlserver1:3306)/" prom/mysqld-exporter:latest
 842d22f1a051f3f5209c9197537ad18e16827c4b3375843d14a5ccadad506cb8
 
 $ sudo docker logs mysqlexporter1
@@ -1014,8 +1014,9 @@ $ sudo docker restart prometheus
 </pre>
 
 <ol>- and finally check that a new target has been added in prometheus, and the mysql metrics are available</ol>
-![image](https://github.com/Capdata/Devops101/assets/19890935/3b4432ae-e1fb-4146-ae8b-72d2648e967e)
-![image](https://github.com/Capdata/Devops101/assets/19890935/3e0c7201-5240-4916-8cfd-4f3e84095411)
+
+![image](https://github.com/Capdata/Devops101/assets/19890935/3b4432ae-e1fb-4146-ae8b-72d2648e967e) 
+![image](https://github.com/Capdata/Devops101/assets/19890935/3e0c7201-5240-4916-8cfd-4f3e84095411) 
 
 
 
