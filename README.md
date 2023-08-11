@@ -403,11 +403,11 @@ Deploy a new MySQL instance with ANSIBLE
 ### Control Node creation & configuration
 - Prepare the first LXC container to host the Control Node by launching an ubuntu:20.04 image named controlnode using LXC client command line:
 <pre>
-$ lxc launch ubuntu:20.04 controlnode
+$ sudo lxc launch ubuntu:20.04 controlnode
 Creating controlnode
 Starting controlnode
 
-$ lxc list controlnode
+$ sudo lxc list controlnode
 +-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
 |    NAME     |  STATE  |         IPV4          |                     IPV6                      |   TYPE    | SNAPSHOTS |
 +-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
@@ -416,7 +416,7 @@ $ lxc list controlnode
 </pre>
 
 - Connect to the controlnode container and update the apt package local repo, then setup python3-pip : 
-<pre>$ lxc exec controlnode bash
+<pre>$ sudo lxc exec controlnode bash
 root@controlnode:~$ apt-get update
 (...)
 root@controlnode:~$ apt-get install -y python3-pip
@@ -448,11 +448,11 @@ exit
 ### Managed Node creation & configuration
 - Prepare a second LXC container to host the Managed Node by launching another ubuntu:20.04 image named managednode using LXC client command line:
 <pre>
-$ lxc launch ubuntu:20.04 managednode
+$ sudo lxc launch ubuntu:20.04 managednode
 Creating managednode
 Starting managednode
 
-$ lxc list
+$ sudo lxc list
 +-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
 |    NAME     |  STATE  |         IPV4          |                     IPV6                      |   TYPE    | SNAPSHOTS |
 +-------------+---------+-----------------------+-----------------------------------------------+-----------+-----------+
@@ -498,7 +498,7 @@ exit
 ### Setting up SSH connection
 - First we need to allow the managed node SSH server to allow password and publickey authentication methods:
 <pre>
-$ lxc exec managednode bash
+$ sudo lxc exec managednode bash
 root@managednode:~$ vi /etc/ssh/sshd_config
 (...)
 PubkeyAuthentication yes
@@ -616,6 +616,7 @@ managednode.lxd | SUCCESS => {
 <ol>- managednode in the all: group</ol>
 <ol>- python3 as the default python interpreter: group</ol>
 <pre>
+$ sudo lxc exec controlnode bash
 root@controlnode:~$ mkdir -p /etc/ansible/group_vars /etc/ansible/host_vars
 vi /etc/ansible/inventory.yml
 (...)
