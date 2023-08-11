@@ -919,4 +919,103 @@ $ sudo lxc list
 </pre>
 # LAB 4 : PROMETHEUS & GRAFANA
 In this LAB we will be setting up a mysql_exporter for Prometheus and a Grafan console to get the first metrics
+## Setup Prometheus and install a MySQL exporter
+### Create a docker container daemon for Prometheus by streaming the image from quay.io/prometheus/prometheus:v2.0.0
+- It is important to make the 9090 port available outside of the container by using -p port redirection
+<pre>
+$ sudo docker run -d --name "prometheus" -p 9090:9090 quay.io/prometheus/prometheus:v2.0.0
+905a6b480c5d5198ac993cbd0234696a073d5e3bcb892c5b783c3f77d7b11e0c
+$ sudo docker ps -f "name=prometheus"
+CONTAINER ID   IMAGE                                  COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+905a6b480c5d   quay.io/prometheus/prometheus:v2.0.0   "/bin/prometheus --c…"   3 minutes ago   Up 3 minutes   0.0.0.0:9090->9090/tcp, :::9090->9090/tcp   prometheus
+</pre>
+- Test if available from your browser, using the public IP corresponding to your environment, eg http://<publicip>:9090/graph
+![image](https://github.com/Capdata/Devops101/assets/19890935/b1316b6e-767f-4fb8-a32c-19756ca0f205)
+
+### Add a mysql_exporter to promotheus
+- Create a mysql user with PROCESS, REPLICATION and SELECT privileges on all objecs in the mysqlserver1 docker container. 
+First check that the mysqlserver1 container is up 
+<pre>
+$ sudo docker ps -f "name=mysqlserver1"
+CONTAINER ID   IMAGE                         COMMAND                  CREATED      STATUS          PORTS                 NAMES
+ea7438ce3304   student1/mysqlserver:latest   "docker-entrypoint.s…"   6 days ago   Up 55 minutes   3306/tcp, 33060/tcp   mysqlserver1
+</pre>
+- Then connect to the container and to mysql, and create the user / grant the privileges:
+<pre>
+$ sudo docker exec -it mysqlserver1 bash
+root@ea7438ce3304:/# mysql --user=root --socket=/var/run/mysqld/mysqld.sock --password
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.34 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+mysql> CREATE USER 'exporter'@'%' IDENTIFIED BY 'capdata' WITH MAX_USER_CONNECTIONS 3;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> FLUSH PRIVILEGES ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit
+Bye
+</pre>
+- Then create another docker container named mysqlexporter1 but this step is a little complex 
+<ol>- First on the host, create a ~/.exporter.cnf file to put a config [client] section and map the file inside the docker container so it can use it at runtime.</ol>
+note: you can get mysqlserver1 IP by running sudo docker inspect on the container and look for IPAddress property<pre>
+$ vi ~/.exporter.cnf
+(...)
+[client]
+host=YOUR_DOCKER_MYSQLSERVER1_IP_HERE
+port=3306
+user=exporter
+password=*******
+</pre>
+
+<ol>- Second step, run a mysqlexporter container by mapping the file created into /.my.cnf, and redirecting port 9104 to the outside</ol>
+<pre>
+$ sudo docker run -d --name mysqlexporter1 -p9104:9104 \ 
+	--mount type=bind,source=/home/student/.exporter.cnf,target=/.my.cnf \ 
+	-e DATA_SOURCE_NAME="exporter:capdata@(mysqlserver1:3306)/" prom/mysqld-exporter:latest
+842d22f1a051f3f5209c9197537ad18e16827c4b3375843d14a5ccadad506cb8
+
+$ sudo docker logs mysqlexporter1
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:220 level=info msg="Starting mysqld_exporter" version="(version=0.15.0, branch=HEAD, revision=6ca2a42f97f3403c7788ff4f374430aa267a6b6b)"
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:221 level=info msg="Build context" build_context="(go=go1.20.5, platform=linux/amd64, user=root@c4fca471a5b1, date=20230624-04:09:04, tags=netgo)"
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=slave_status
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=global_status
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=global_variables
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=info_schema.innodb_cmp
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=info_schema.innodb_cmpmem
+ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:233 level=info msg="Scraper enabled" scraper=info_schema.query_response_time
+ts=2023-08-11T09:43:02.587Z caller=tls_config.go:274 level=info msg="Listening on" address=[::]:9104
+ts=2023-08-11T09:43:02.587Z caller=tls_config.go:277 level=info msg="TLS is disabled." http2=false address=[::]:9104
+</pre>
+
+<ol>- Then log in prometheus container, add a section to /etc/prometheus/prometheus.yml file to add a mysqlexporter1 as a new target, and restart prometheus container to validate
+note : again use docker inspect to get mysqlexporter1 IP address</ol>
+<pre>
+$ sudo docker exec -it prometheus sh
+/prometheus $ vi /etc/prometheus/prometheus.yml
+(...)
+  - job_name: 'mysql80'
+    static_configs:
+      - targets: ['172.17.0.5:9104']
+/prometheus $ exit
+$ sudo docker restart prometheus
+</pre>
+
+<ol>- and finally check that a new target has been added in prometheus, and the mysql metrics are available</ol>
+![image](https://github.com/Capdata/Devops101/assets/19890935/3b4432ae-e1fb-4146-ae8b-72d2648e967e)
+![image](https://github.com/Capdata/Devops101/assets/19890935/3e0c7201-5240-4916-8cfd-4f3e84095411)
+
+
 
