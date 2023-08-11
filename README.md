@@ -870,4 +870,53 @@ ok: [managednode.lxd]
 PLAY RECAP **********************************************************************************************************************************************************************************************************************************
 managednode.lxd            : ok=15   changed=15    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 </pre>
+### Test the deployment
+- FInally test the deployment by connecting to the mysql instance in the managednode container:
+<pre>
+$ sudo lxc exec managednode bash
+root@managednode:~# mysql --user=root --socket=/var/lib/mysql/mysqld.sock --password
+Enter password: *****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.33-25 Percona Server (GPL), Release '25', Revision '60c9e2c5'
+
+Copyright (c) 2009-2023 Percona LLC and/or its affiliates
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.01 sec)
+
+mysql> exit
+Bye
+</pre>
+- Disconnect and shut down both 2 lxc containers
+<pre>
+root@managednode:~# exit
+exit
+$ sudo lxc stop managednode controlnode
+$ sudo lxc list
++-------------+---------+------+------+-----------+-----------+
+|    NAME     |  STATE  | IPV4 | IPV6 |   TYPE    | SNAPSHOTS |
++-------------+---------+------+------+-----------+-----------+
+| controlnode | STOPPED |      |      | CONTAINER | 0         |
++-------------+---------+------+------+-----------+-----------+
+| managednode | STOPPED |      |      | CONTAINER | 0         |
++-------------+---------+------+------+-----------+-----------+
+</pre>
 # LAB 4 : PROMETHEUS & GRAFANA
+In this LAB we will be setting up a mysql_exporter for Prometheus and a Grafan console to get the first metrics
+
