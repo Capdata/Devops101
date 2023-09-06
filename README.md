@@ -56,7 +56,6 @@ devops_student[1-6]/
     └── sql
         ├── 1_sakila-schema.sql
         ├── 2_sakila-data.sql
-        ├── 3_alter_user_sakila.sql
         └── README.md
 
 </pre>
@@ -93,7 +92,7 @@ $ git branch -a
   remotes/origin/HEAD -> origin/main
   remotes/origin/main
 
-$ vi student[1-6]my/cs.xml    
+$ vi student[1-6]/my/cs.xml    
 (...)
 </pre>
 
@@ -341,6 +340,8 @@ mysql> show tables from sakila ;
 | store                      |
 +----------------------------+
 23 rows in set (0.00 sec)
+mysql> exit
+root@ea7438ce3304:/# exit
 </pre>
 - To test the Python code against the new MySQL docker container, create a new container by :
   <ol>- creating an image from python:latest</ol>
@@ -368,8 +369,7 @@ RUN pip install mysqlclient lxml
 RUN mkdir /var/lib/myagent
 RUN git clone https://students-capdata:TOKEN@github.com/Capdata/devops_student[1-6].git 
 RUN cd devops_student[1-6] && git checkout MYSQL_1
-RUN cp -pR student[1-6]/* /var/lib/myagent/
-RUN echo "172.17.0.2  mysqlserver1" >> /etc/hosts
+RUN cp -pR /devops_student1/student1/* /var/lib/myagent/
 </pre>
 - Build the image and run the container :
 <pre>
@@ -384,7 +384,7 @@ student[1-6]/myagent       latest    7ba54b321dc7   4 minutes ago   1.11GB
 student[1-6]/mysqlserver   latest    8e8017633e91   21 hours ago    659MB
 (...)
 
-$ sudo docker run -tid --name agent1 student[1-6]/myagent
+$ sudo docker run -tid --name agent1 --add-host "mysqlserver1:172.17.0.2" student1/myagent
 0812e0d714144012d6abb2b04afbacafc3f3ccccfea60fc65ae6674ed6f80fe6
 </pre>  
 
@@ -395,6 +395,11 @@ root@99585881bddf:/# cd /var/lib/myagent
 root@99585881bddf:/var/lib/myagent# python3 my_healthcheck.py
 Version detectee : ({'version()': '8.0.34'},)
 </pre>
+- Exit from the container and the student shell:
+<pre>
+root@99585881bddf:/var/lib/myagent# exit
+$ exit
+</pre>
 
 # LAB 3 : ANSIBLE
 Deploy a new MySQL instance with ANSIBLE
@@ -403,6 +408,7 @@ Deploy a new MySQL instance with ANSIBLE
 ### Control Node creation & configuration
 - Prepare the first LXC container to host the Control Node by launching an ubuntu:20.04 image named controlnode using LXC client command line:
 <pre>
+$ su - student 
 $ sudo lxc launch ubuntu:20.04 controlnode
 Creating controlnode
 Starting controlnode
@@ -463,6 +469,7 @@ $ sudo lxc list
 </pre>
 - Connect to the managednode container, check python3 version and setup a group and user named both ansible as explained in the training:
 <pre>
+$ sudo lxc exec managednode bash
 root@managednode:~$ python3 --version
 Python 3.8.10
 
@@ -524,9 +531,14 @@ Aug 10 09:52:41 managednode sshd[1093]: Server listening on 0.0.0.0 port 22.
 Aug 10 09:52:41 managednode sshd[1093]: Server listening on :: port 22.
 Aug 10 09:52:41 managednode systemd[1]: Started OpenBSD Secure Shell server.
 </pre>
+- Exit from managednode
+- <pre>
+root@managednode:~$ exit
+</pre> 
 
 - Then we need to generate SSH ecdsa keys on the controlnode and copy the public key over to the managednode to allow controle node -> managed node communication (don't put a passphrase):
 <pre>
+$ sudo lxc exec controlnode bash
 root@controlnode:~$ ssh-keygen -t ecdsa -b 521
 Generating public/private ecdsa key pair.
 Enter file in which to save the key (/root/.ssh/id_ecdsa):
@@ -559,7 +571,7 @@ Number of key(s) added: 1
 
 Now try logging into the machine, with:   "ssh 'ansible@managednode.lxd'"
 and check to make sure that only the key(s) you wanted were added.
-
+root@controlnode:~$ exit
 </pre>
 
 - Test the connection : 
@@ -618,7 +630,7 @@ managednode.lxd | SUCCESS => {
 <pre>
 $ sudo lxc exec controlnode bash
 root@controlnode:~$ mkdir -p /etc/ansible/group_vars /etc/ansible/host_vars
-vi /etc/ansible/inventory.yml
+$ vi /etc/ansible/inventory.yml
 (...)
 all:
   hosts:
@@ -666,6 +678,7 @@ root@controlnode:~$ chmod 600 ~/.vault
 root@controlnode:~$ ansible-vault create  --vault-id ~/.vault /etc/ansible/group_vars/all/secret.yml
 [WARNING]: /etc/ansible/group_vars/all does not exist, creating...
 Vault password: ******
+(...)
 rootpassword: "******"
 </pre>
 
@@ -815,7 +828,6 @@ root@controlnode:~$ vi ~/Install_MySQL/rl_postinstall_MySQL/handlers/main.yml
 
 ### And execute the playbook to create the mysql.service on managednode:
 <pre>
-root@controlnode:~$ cd ~/Install_MySQL/
 root@controlnode:~$ ansible-playbook -i /etc/ansible/inventory.yml --vault-id ~/.vault playbook_install_MySQL.yml
 
 PLAY [Playbook deploiement et configuration MySQL 8.0] **************************************************************************************************************************************************************************************
@@ -824,16 +836,16 @@ TASK [Gathering Facts] *********************************************************
 ok: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : installation GNUPG2] *****************************************************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : installation CURL] *******************************************************************************************************************************************************************************************
 ok: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : installation python3-pip] ************************************************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : installation PyMySQL via PIP] ********************************************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : Recup distro UBUNTU dans une variable] ***********************************************************************************************************************************************************************
 changed: [managednode.lxd]
@@ -844,7 +856,7 @@ ansible.cfg to get rid of this message.
 changed: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : installation package DEB pour installer le repo Percona] *****************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
 
 TASK [rl_prepa_install_mysql : Mise a jour du cache APT] ************************************************************************************************************************************************************************************
 ok: [managednode.lxd]
@@ -853,7 +865,7 @@ TASK [rl_prepa_install_mysql : activation du repository Percona avec percona-rel
 changed: [managednode.lxd]
 
 TASK [rl_install_MySQL : Install Percona-Server] ********************************************************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
 
 TASK [rl_install_MySQL : configuration du service systemd] **********************************************************************************************************************************************************************************
 ok: [managednode.lxd]
@@ -865,11 +877,28 @@ TASK [rl_postinstall_MySQL : verifier si le service est bien demarre] **********
 ok: [managednode.lxd]
 
 TASK [rl_postinstall_MySQL : changer le plugin d authentification pour root@localhost] ******************************************************************************************************************************************************
-ok: [managednode.lxd]
+changed: [managednode.lxd]
+
+TASK [rl_postinstall_MySQL : Flush Privs] ***************************************************************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+TASK [rl_postinstall_MySQL : Changer le mot de passe de root] *******************************************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+TASK [rl_postinstall_MySQL : Appliquer la configuration via le template j2] *****************************************************************************************************************************************************************
+changed: [managednode.lxd]
+
+RUNNING HANDLER [rl_postinstall_MySQL : restart_percona] ************************************************************************************************************************************************************************************
+changed: [managednode.lxd]
 
 PLAY RECAP **********************************************************************************************************************************************************************************************************************************
-managednode.lxd            : ok=15   changed=15    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+managednode.lxd            : ok=19   changed=14   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 </pre>
+- And finally exit the controlnode:
+<pre>
+root@controlnode:~$ exit
+</pre>
+
 ### Test the deployment
 - FInally test the deployment by connecting to the mysql instance in the managednode container:
 <pre>
@@ -916,6 +945,10 @@ $ sudo lxc list
 +-------------+---------+------+------+-----------+-----------+
 | managednode | STOPPED |      |      | CONTAINER | 0         |
 +-------------+---------+------+------+-----------+-----------+
+</pre>
+- Finally exit the student shell
+<pre>
+$ exit
 </pre>
 # LAB 4 : PROMETHEUS & GRAFANA
 In this LAB we will be setting up a mysql_exporter for Prometheus and a Grafan console to get the first metrics
@@ -967,6 +1000,8 @@ Query OK, 0 rows affected (0.00 sec)
 
 mysql> exit
 Bye
+root@ea7438ce3304:/# exit
+exit
 </pre>
 - Then create another docker container named mysqlexporter1 but this step is a little complex 
 <ol>- First on the host, create a ~/.exporter.cnf file to put a config [client] section and map the file inside the docker container so it can use it at runtime.</ol>
@@ -982,10 +1017,8 @@ password=*******
 
 <ol>- Second step, run a mysqlexporter container by mapping the file created into /.my.cnf, and redirecting port 9104 to the outside</ol>
 <pre>
-$ sudo docker run -d --name mysqlexporter1 -p9104:9104 \ 
-	--mount type=bind,source=/home/student/.exporter.cnf,target=/.my.cnf \ 
-	-e DATA_SOURCE_NAME="exporter:*****@(mysqlserver1:3306)/" prom/mysqld-exporter:latest
-842d22f1a051f3f5209c9197537ad18e16827c4b3375843d14a5ccadad506cb8
+$ sudo docker run -d --name mysqlexporter1 -p9104:9104 --mount type=bind,source=/home/student/.exporter.cnf,target=/.my.cnf -e DATA_SOURCE_NAME="exporter:*******@(mysqlserver1:3306)/" prom/mysqld-exporter:latest
+0f1da4f9bded76e1ae07d2beff3d984dbf12988bc7db9d33e428da3f77a41678
 
 $ sudo docker logs mysqlexporter1
 ts=2023-08-11T09:43:02.586Z caller=mysqld_exporter.go:220 level=info msg="Starting mysqld_exporter" version="(version=0.15.0, branch=HEAD, revision=6ca2a42f97f3403c7788ff4f374430aa267a6b6b)"
@@ -1019,14 +1052,14 @@ $ sudo docker restart prometheus
 ![image](https://github.com/Capdata/Devops101/assets/19890935/3e0c7201-5240-4916-8cfd-4f3e84095411) 
 
 ## Adding Grafana
-- Run a last container for grafana by pulling the official image at grafana/grafana-enterprise :
+- Run a last container for grafana by pulling the official image in version 5.3.2 at grafana/grafana :
 <pre>
-$ sudo docker run -d -p 3000:3000 --name=grafana grafana/grafana-enterprise
+$ sudo docker run -d -p 3000:3000 --name=grafana grafana/grafana:5.3.2
 16f619d9ddb72b1d147427ebe4e4bd92402ce092aa36bfeff24ca8ad3b496b16
 
 $ sudo docker ps -f 'name=grafana'
 CONTAINER ID   IMAGE                        COMMAND     CREATED              STATUS              PORTS                                       NAMES
-16f619d9ddb7   grafana/grafana-enterprise   "/run.sh"   About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   grafana
+16f619d9ddb7   grafana/grafana:5.3.2   "/run.sh"   About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   grafana
 </pre>
 
 - And test the connection with your browser:
